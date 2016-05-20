@@ -1,2 +1,3 @@
 # plot2DO
-Plot 2D occupancy heat maps
+**Plot 2D O**ccupancy heat maps
+
