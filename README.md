@@ -67,6 +67,4 @@ $ Rscript plot2DO.R -f data.bed -r TSS -l 50 -L 200 -u 1000 -d 1000
 
 
 ## Citation
-If you use this program in your research, please cite our article:
-
-Chereji R.V., Ocampo J. and Clark D.J. - MNase-sensitive complexes in yeast: nucleosomes or non-histone proteins? *In preparation.*
+If you use this program in your research, please cite our article. (not available yet)
