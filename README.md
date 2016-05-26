@@ -65,5 +65,25 @@ $ Rscript plot2DO.R -f data.bed -r TSS -l 50 -L 200 -u 1000 -d 1000
 ![](img.png)
 
 
+## Extra functions
+The proper minimum (*`--minLength`*) and maximum (*`--maxLength`*) fragment sizes to be displayed in the 2D occupancy plot can be obtained by inspecting the histogram of all DNA fragment lengths that are present in the sample. This can be done using the additional function **computeLengthHistogram**. The available options are shown below:
+```
+$ Rscript computeLengthHistogram.R --help
+Usage: computeLengthHistogram.R [options]
+
+
+Options:
+        -f FILE, --file=FILE
+                Dataset file name [options: BED or BAM format]
+
+        -o OUTPUTS, --outputs=OUTPUTS
+                Types of outputs to be generated, separated by commas only [options: pdf, csv, RData; default = pdf,csv,RData]
+
+        -h, --help
+                Show this help message and exit
+
+```
+
+
 ## Citation
 If you use this program in your research, please cite our article. (not available yet)
