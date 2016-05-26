@@ -3,12 +3,11 @@
 **plot2DO** is an R package for computing and visualizing the two-dimensional (2D) occupancies. Instead of using the typical one-dimensional (1D) occupancy/coverage, obtained by stacking all the mapped reads regardless of their lengths, we show the relative occupancy given by DNA fragments of specific lengths in a matrix form.
 
 ## Installing
-This tool uses the following R packages: *`caTools`*, *`colorRamps`*, *`GenomicAlignments`*, *`GenomicRanges`*, *`rtracklayer`*.
+This tool uses the following R packages: *`caTools`*, *`colorRamps`*, *`GenomicAlignments`*, *`GenomicRanges`*, *`optparse`*, *`rtracklayer`*.
 To install these packages, open R and execute the following commands:
 ```{r}
-> # Install caTools and colorRamps packages from CRAN:
-> install.packages('caTools')
-> install.packages(c("caTools", "colorRamps")
+> # Install caTools, colorRamps and optparse packages from CRAN:
+> install.packages(c("caTools", "colorRamps", "optparse"))
 >                  
 > # Get the latest version of Bioconductor:
 > source("https://bioconductor.org/biocLite.R")
