@@ -3,7 +3,7 @@
 **plot2DO** is an R package for computing and visualizing the two-dimensional (2D) occupancies. Instead of using the typical one-dimensional (1D) occupancy/coverage, obtained by stacking all the mapped reads regardless of their lengths, we show the relative occupancy given by DNA fragments of specific lengths in a matrix form.
 
 ## Installing
-To download this package you can use the github user interface (click the **Download** button) or if you want to download it from the linux terminal, first instal the *`git`* package,
+To download this package you can use the github user interface (click the **Download** button) or if you want to download it from the linux terminal, first install the *`git`* package,
 ```
 $ sudo apt-get install git
 ```
