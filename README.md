@@ -12,7 +12,7 @@ $ sudo apt-get install git
 $ sudo yum install git
 ```
 Installers for OSX (Mac) and Windows (PC) are available for download at the Git websites: *`http://git-scm.com/download/mac`* and *`http://git-scm.com/download/win`*.
-After *`git`* has been installed, run the following command from the folder where you want to download the **plot2DO** package
+After *`git`* has been installed, run the following command from the folder where you want to download the **plot2DO** package:
 ```
 $ git clone https://github.com/rchereji/plot2DO.git
 ```
