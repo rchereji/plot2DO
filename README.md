@@ -1,6 +1,6 @@
 ## plot2DO: Plot 2D Occupancies
 
-**plot2DO** is an R package for computing and visualizing the two-dimensional (2D) occupancies. Instead of using the typical one-dimensional (1D) occupancy/coverage, obtained by stacking all the mapped reads regardless of their lengths, we show the relative occupancy given by DNA fragments of specific lengths in a matrix form.
+**plot2DO** is an R package for computing and visualizing the two-dimensional (2D) occupancies. Instead of using the typical one-dimensional (1D) occupancy/coverage, obtained by stacking all the mapped reads regardless of their lengths, it is more informative to compute the relative occupancy given by DNA fragments of specific lengths in a matrix form.
 
 ## Download
 To download this package you can use the Github user interface and just click the **Download** button. If you want to download the package from the terminal, then you need to install first a *`git`* client of your choice, using the package manager that is available for your system. For example, in Ubuntu or other Debian-based distributions of Linux, you can use *`apt-get`*:
@@ -33,7 +33,7 @@ $ git clone https://github.com/rchereji/plot2DO.git
 ```
 
 
-## Usage instructions
+## Usage
 After the R packages have been installed, you can execute **plot2DO** from *`bash`*. To get to the help page, open a terminal and run:
 ```
 $ Rscript plot2DO.R --help
