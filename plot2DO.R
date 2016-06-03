@@ -106,7 +106,7 @@ extraReads = GRanges(seqnames = names(chrLen),
                      ranges = IRanges(start = chrLen, width = 1),
                      strand = rep("+",noChr),
                      seqlengths = chrLen)
-reads = c(reads, extraReads)
+reads = c(extraReads, reads)
 
 
 #################
