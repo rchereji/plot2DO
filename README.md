@@ -7,7 +7,7 @@ To download this package you can use the Github user interface and just click th
 ```
 $ sudo apt-get install git
 ```
-, while in Fedora, CentOS, or Red Hat Linux, you can use `yum`:
+while in Fedora, CentOS, or Red Hat Linux, you can use `yum`:
 ```
 $ sudo yum install git
 ```
