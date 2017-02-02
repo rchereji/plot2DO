@@ -99,7 +99,8 @@ Options:
 
 
 ## Citation
-If you use this program in your research, please cite our article. (not available yet)
+If you use this program in your research, please cite [our article](http://www.cell.com/molecular-cell/fulltext/S1097-2765(16)30847-4):   
+Chereji RV, Ocampo J, Clark DJ. 2017. MNase-Sensitive Complexes in Yeast: Nucleosomes and Non-histone Barriers. Molecular Cell 65: 565-577.e563.
 
 
 ## License
