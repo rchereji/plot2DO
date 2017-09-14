@@ -69,8 +69,7 @@ Notice that using the `--simplifyPlot=on` option, it is possible to plot only th
 |:--:| 
 | **Figure 3.** *2DO plots showing the distribution of sequencing data near the yeast tRNA genes (A), origins of replication (B), and centromeres (C).* |
 
-**plot2DO** can process sequencing data from multiple organisms: yeast, fly, worm, mouse and human. The available genome versions that are available are the following: yeast -- sacCer3; fly -- dm3, dm6; worm -- ce10, ce11; mouse -- mm9, mm10; human -- hg18, hg19. For the multicellular organisms the alignment of +1 nucleosomes is not possible, as the locations of these nucleosomes could vary from cell type to cell type, and these positions should be identified in each cell type, separately. Here are a few examples of commands used to examine the distribution of reads at the TSS of the aforementioned higher organisms.
-
+**plot2DO** can process sequencing data from multiple organisms: *Saccharomyces cerevisiae*, *Drosophila melanogaster*, *Caenorhabditis elegans*, *Mus musculus* and *Homo sapiens*. The following genome versions are available for these organisms: yeast — sacCer3; fly — dm3, dm6; worm — ce10, ce11; mouse — mm9, mm10; human — hg18, hg19. For the multicellular organisms the alignment of +1 nucleosomes is not possible, as the locations of these nucleosomes could vary from cell type to cell type, and these positions should be identified separately in each cell type. Here are a few examples of commands used to examine the distribution of reads at the TSSs of the aforementioned higher organisms:
 ```
 $ Rscript plot2DO.R --file=fly_SRR2038265.bam --organism=dm3 --reference=TSS --simplifyPlot=on
 $ Rscript plot2DO.R --file=worm_SRR3289717.bam --organism=ce10 --reference=TSS --simplifyPlot=on
