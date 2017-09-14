@@ -22,7 +22,7 @@ In order to be able to run **plot2DO**, you will need to have R installed on you
 
 
 ## Dependencies
-**plot2DO** uses the following R packages: `biomaRt, caTools, colorRamps, GenomicRanges, optparse, rtracklayer` and `Rsamtools`. To install these packages, open R and execute the following commands:
+**plot2DO** uses the following R packages: `biomaRt, caTools, colorRamps, GenomicRanges, optparse, rtracklayer, Rsamtools`. To install these packages, open R and execute the following commands:
 ```{r}
 > # Install caTools, colorRamps and optparse packages from CRAN:
 > install.packages(c("caTools", "colorRamps", "optparse"))
