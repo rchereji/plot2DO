@@ -190,16 +190,16 @@ The data that were used in the examples above were downloaded from GEO database.
 
 | Filename | GEO accession number for the raw data |
 | ------------- | ------------- |
-| yeast_SRR2045610.bam | GSM1700669 |
-| yeast_50U_MNase_SRR3649301.bam | GSM2193286 |
-| yeast_100U_MNase_SRR3649296.bam | GSM2193281 |
-| yeast_200U_MNase_SRR3649297.bam | GSM2193282 |
-| yeast_300U_MNase_SRR3649298.bam | GSM2193283 |
-| yeast_400U_MNase_SRR3649299.bam | GSM2193284 |
-| fly_SRR2038265.bam | GSM1694824 |
-| worm_SRR3289717.bam | GSM2098437 |
-| mouse_SRR572708.bam | GSM1004654 |
-| human_SRR1781839.bam | GSM1425454 |
+| yeast_SRR2045610.bam | [GSM1700669](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1700669) |
+| yeast_50U_MNase_SRR3649301.bam | [GSM2193286](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM2193286) |
+| yeast_100U_MNase_SRR3649296.bam | [GSM2193281](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM2193281) |
+| yeast_200U_MNase_SRR3649297.bam | [GSM2193282](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM2193282) |
+| yeast_300U_MNase_SRR3649298.bam | [GSM2193283](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM2193283) |
+| yeast_400U_MNase_SRR3649299.bam | [GSM2193284](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM2193284) |
+| fly_SRR2038265.bam | [GSM1694824](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1694824) |
+| worm_SRR3289717.bam | [GSM2098437](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM2098437) |
+| mouse_SRR572708.bam | [GSM1004654](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1004654) |
+| human_SRR1781839.bam | [GSM1425454](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1425454) |
 
 
 ## License
