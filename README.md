@@ -156,6 +156,14 @@ Options:
 ```
 
 
+## Quality check of MNase-seq data
+**plot2DO** is very useful for inspecting the degree of digestion in MNase-seq and MNase-ChIP-seq experiments. Figure 6 shows three examples of 2DO plots that originate from an under-digested sample, a properly-digested sample, and an over-digested sample.
+
+|![](misc/Figure_S6.png)|
+|:--:| 
+| **Figure 6.** *Plot2DO offers a quick quality check for MNase-seq experiments. The left panel shows an under-digested sample: untrimmed linkers are still attached to nucleosomes (fragment length > 147 bp) and short fragments, protected by other proteins found in the promoters, are still not fully digested by MNase. The middle panel shows a properly digested sample: most of the undigested fragments originate from well trimmed nucleosome core particles, and have a length of about 147 bp. The right panel shows an over-digested sample: nucleosome core particles are invaded by MNase, and most of the undigested fragments have a length smaller than 147 bp.* |
+
+
 ## Data used in examples
 The data that were used in the examples above were downloaded from GEO database. The corresponding accession numbers are listed below:
 
