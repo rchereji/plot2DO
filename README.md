@@ -90,11 +90,11 @@ $ Rscript plot2DO.R --file=yeast_100U_MNase_SRR3649296.bam --sites=Annotations/Y
 $ Rscript plot2DO.R --file=yeast_200U_MNase_SRR3649297.bam --sites=Annotations/Yeast_tRNA_genes.bed --siteLabel=tRNA --upstream=100 --downstream=100 --squeezePlot=on
 $ Rscript plot2DO.R --file=yeast_300U_MNase_SRR3649298.bam --sites=Annotations/Yeast_tRNA_genes.bed --siteLabel=tRNA --upstream=100 --downstream=100 --squeezePlot=on
 $ Rscript plot2DO.R --file=yeast_400U_MNase_SRR3649299.bam --sites=Annotations/Yeast_tRNA_genes.bed --siteLabel=tRNA --upstream=100 --downstream=100 --squeezePlot=on
-$ Rscript plot2DO.R --file=yeast_50U_MNase_SRR3649301.bam --reference=Plus1 --siteLabel=Plus1 --upstream=100 --downstream=100 --squeezePlot=on
-$ Rscript plot2DO.R --file=yeast_100U_MNase_SRR3649296.bam --reference=Plus1 --siteLabel=Plus1 --upstream=100 --downstream=100 --squeezePlot=on
-$ Rscript plot2DO.R --file=yeast_200U_MNase_SRR3649297.bam --reference=Plus1 --siteLabel=Plus1 --upstream=100 --downstream=100 --squeezePlot=on
-$ Rscript plot2DO.R --file=yeast_300U_MNase_SRR3649298.bam --reference=Plus1 --siteLabel=Plus1 --upstream=100 --downstream=100 --squeezePlot=on
-$ Rscript plot2DO.R --file=yeast_400U_MNase_SRR3649299.bam --reference=Plus1 --siteLabel=Plus1 --upstream=100 --downstream=100 --squeezePlot=on
+$ Rscript plot2DO.R --file=yeast_50U_MNase_SRR3649301.bam --reference=Plus1 --upstream=100 --downstream=100 --squeezePlot=on
+$ Rscript plot2DO.R --file=yeast_100U_MNase_SRR3649296.bam --reference=Plus1 --upstream=100 --downstream=100 --squeezePlot=on
+$ Rscript plot2DO.R --file=yeast_200U_MNase_SRR3649297.bam --reference=Plus1 --upstream=100 --downstream=100 --squeezePlot=on
+$ Rscript plot2DO.R --file=yeast_300U_MNase_SRR3649298.bam --reference=Plus1 --upstream=100 --downstream=100 --squeezePlot=on
+$ Rscript plot2DO.R --file=yeast_400U_MNase_SRR3649299.bam --reference=Plus1 --upstream=100 --downstream=100 --squeezePlot=on
 ```
 The figures resulted from these commands are shown as panels in Figure 5.
 
