@@ -1,5 +1,12 @@
 #!/usr/bin/env Rscript
 
+# v1.0.1 - add Arabidopsis thaliana (TAIR10)
+#        - change option --organism to --genome
+# v1.0.2 - add S. pombe (EF2)
+# v1.0.3 - add chr Y and rDNA for dm6 genome
+# v1.0.4 - correct RangesList issue (see https://support.bioconductor.org/p/109079/)
+
+
 library("optparse")
 
 options = list(
@@ -7,8 +14,8 @@ options = list(
               help="Dataset file name [options: BED or BAM format]"),
   make_option(c("-t", "--type"), type="character", default="occ", 
               help="Types of distribution to plot [options: occ, dyads, fivePrime_ends, threePrime_ends; default = %default]"),
-  make_option(c("-o", "--organism"), type="character", default="sacCer3", 
-              help="Genome version [options: sacCer3 (default), dm3, dm6, ce10, ce11, mm9, mm10, hg18, hg19]"),
+  make_option(c("-g", "--genome"), type="character", default="sacCer3", 
+              help="Genome version [options: sacCer3 (default) (S. cerevisiae); EF2 (S. pombe); tair10 (A. thaliana); dm3, dm6 (D. melanogaster), ce10, ce11 (C. elegans), mm9, mm10 (M. musculus), hg18, hg19 (H. sapiens)]"),
   make_option(c("-r", "--reference"), type="character", default="TSS", 
               help="Reference points to align [options: TSS (default), TTS, Plus1]"),
   make_option(c("-s", "--sites"), type="character", default=NULL, 
@@ -45,6 +52,23 @@ if (opt$squeezePlot == "on"){
   opt$simplifyPlot = "on"
 }
 
+###############
+# Test parameters
+# opt = list(file="sample.bam",
+#            type="occ",
+#            genome="dm6",
+#            reference="TSS",
+#            sites="Annotations/Nucleosome_positions_dmel_AT_0.75-1.bed",
+#            siteLabel="AT_rich_nucs",
+#            align="center",
+#            minLength=50,
+#            maxLength=250,
+#            upstreamPlotWindow=500,
+#            downstreamPlotWindow=500,
+#            simplifyPlot="on",
+#            squeezePlot="off")
+###############
+
 ##################
 # Initialization #
 ##################
@@ -53,7 +77,7 @@ plot.type = toupper(opt$type)
 plot.type = strsplit(plot.type, ',')[[1]]
 
 # Genome
-genome = opt$organism
+genome = opt$genome
 
 # Data file name
 inputFilename = opt$file
@@ -72,6 +96,73 @@ switch(genome,
          
          # Load sacCer3 annotations
          annotations = read.csv("Annotations/sacCer3_annotations.csv", header=TRUE, stringsAsFactors=FALSE)
+       },
+       EF2={
+         chrLen = c(5579133,4539804,2452883)
+         names(chrLen) = c("I","II","III")
+         
+         # Get human annotations
+         suppressPackageStartupMessages(library(biomaRt))
+         
+         # listMarts(host='fungi.ensembl.org') # use this host for getting the annotations for EF2
+         # listDatasets(useMart(biomart="fungal_mart",host="fungi.ensembl.org"))
+         # other Ensembl archives: http://www.ensembl.org/info/website/archives/index.html
+         
+         # Get EF2 annotations
+         ensembl = useMart(host='fungi.ensembl.org', 
+                           biomart='fungal_mart', 
+                           dataset='spombe_eg_gene')
+         # listFilters(mart=ensembl)
+         
+         annot = getBM(c("refseq_mrna", "chromosome_name", "strand", "transcript_start", "transcript_end"), mart=ensembl)
+         annot = annot[! (annot$refseq_mrna == ''), ]
+         
+         strand = annot$strand
+         txStart = annot$transcript_start
+         txEnd = annot$transcript_end
+         
+         TSS = txStart
+         TTS = txEnd
+         TSS[strand == -1] = txEnd[strand == -1]
+         TTS[strand == -1] = txStart[strand == -1]
+         
+         annotations = data.frame(Transcript = annot$refseq_mrna, 
+                                  Chr = annot$chromosome_name, 
+                                  Strand = strand,
+                                  TSS = TSS,
+                                  TTS = TTS)
+       },
+       tair10={
+         chrLen = c(30427671,19698289,23459830,18585056,26975502)
+         names(chrLen) = c("1","2","3","4","5")
+         
+         # Get Arabidopsis annotations
+         suppressPackageStartupMessages(library(biomaRt))
+         
+         # Get TAIR10 annotations
+         # listDatasets(useMart(biomart="plants_mart",host="plants.ensembl.org"))
+         ensembl = useMart(host="plants.ensembl.org", 
+                           biomart='plants_mart', 
+                           dataset='athaliana_eg_gene')
+         # listFilters(mart=ensembl)
+         
+         annot = getBM(c("ensembl_transcript_id", "chromosome_name", "strand", "transcript_start", "transcript_end"), mart=ensembl)
+         annot = annot[! (annot$ensembl_transcript_id == ''), ]
+         
+         strand = annot$strand
+         txStart = annot$transcript_start
+         txEnd = annot$transcript_end
+         
+         TSS = txStart
+         TTS = txEnd
+         TSS[strand == -1] = txEnd[strand == -1]
+         TTS[strand == -1] = txStart[strand == -1]
+         
+         annotations = data.frame(Transcript = annot$ensembl_transcript_id, 
+                                  Chr = annot$chromosome_name, 
+                                  Strand = strand,
+                                  TSS = TSS,
+                                  TTS = TTS)
        },
        dm3={
          chrLen = c(23011544,21146708,24543557,27905053,1351857,22422827)
@@ -108,8 +199,10 @@ switch(genome,
                                   TTS = TTS)
        },
        dm6={
-         chrLen = c(23513712,25286936,28110227,32079331,1348131,23542271)
-         names(chrLen) = c("chr2L","chr2R","chr3L","chr3R","chr4","chrX")
+         #chrLen = c(23513712,25286936,28110227,32079331,1348131,23542271)
+         #names(chrLen) = c("2L","2R","3L","3R","4","X")
+         chrLen = c(23513712,25286936,28110227,32079331,1348131,23542271,3667352,76973)
+         names(chrLen) = c("2L","2R","3L","3R","4","X","Y","rDNA")
          
          # Get fly annotations
          suppressPackageStartupMessages(library(biomaRt))
@@ -342,7 +435,7 @@ switch(genome,
        },
        {
          print_help(opt_parser)
-         stop(paste("Genome ", genome, " is not supported yet. Supported options: sacCer3, dm3, dm6, ce10, ce11, mm9, mm10, hg18, hg19.", sep=""), call.=FALSE)
+         stop(paste("Genome ", genome, " is not supported yet. Supported options: sacCer3, EF2, tair10, dm3, dm6, ce10, ce11, mm9, mm10, hg18, hg19.", sep=""), call.=FALSE)
        }
 )
 
@@ -393,6 +486,7 @@ switch(inputType,
                          ranges = IRanges(start=bam[[1]]$pos[posStrandReads], width=bam[[1]]$isize[posStrandReads]),
                          strand = "*")
          rm(bam)
+         # save(reads, file=paste("reads.", Lmin, "_", Lmax, ".", sample.name, ".RData", sep=""))
        },
        {
          print_help(opt_parser)
@@ -631,11 +725,11 @@ AlignRegions = function(Profile, ReferenceGRanges)
 {
   # Create Views with all the ReferenceGRanges
   chrName = unique(as.character(seqnames(ReferenceGRanges)))
-  myViews = Views(Profile[chrName], as(ReferenceGRanges, "RangesList")[chrName])
+  myViews = Views(Profile[chrName], as(ReferenceGRanges, "IntegerRangesList")[chrName])
   AlignedProfilesList = lapply(myViews, function(gr) t(viewApply(gr, as.vector)))
   AlignedProfiles = do.call("rbind", AlignedProfilesList)
   
-  ## Get the index of ReferenceGRanges, which were reorganized by as(ReferenceGRanges, "RangesList")
+  ## Get the index of ReferenceGRanges, which were reorganized by as(ReferenceGRanges, "IntegerRangesList")
   listInd = split(1:length(ReferenceGRanges), as.factor(seqnames(ReferenceGRanges)))
   idx = do.call("c", listInd)
   
