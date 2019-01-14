@@ -5,6 +5,7 @@
 # v1.0.2 - add S. pombe (EF2)
 # v1.0.3 - add chr Y and rDNA for dm6 genome
 # v1.0.4 - correct RangesList issue (see https://support.bioconductor.org/p/109079/)
+# v1.0.5 - add H. sapiens (hg38)
 
 
 library("optparse")
@@ -15,7 +16,7 @@ options = list(
   make_option(c("-t", "--type"), type="character", default="occ", 
               help="Types of distribution to plot [options: occ, dyads, fivePrime_ends, threePrime_ends; default = %default]"),
   make_option(c("-g", "--genome"), type="character", default="sacCer3", 
-              help="Genome version [options: sacCer3 (default) (S. cerevisiae); EF2 (S. pombe); tair10 (A. thaliana); dm3, dm6 (D. melanogaster), ce10, ce11 (C. elegans), mm9, mm10 (M. musculus), hg18, hg19 (H. sapiens)]"),
+              help="Genome version [options: sacCer3 (default) (S. cerevisiae); EF2 (S. pombe); tair10 (A. thaliana); dm3, dm6 (D. melanogaster), ce10, ce11 (C. elegans), mm9, mm10 (M. musculus), hg18, hg19, hg38 (H. sapiens)]"),
   make_option(c("-r", "--reference"), type="character", default="TSS", 
               help="Reference points to align [options: TSS (default), TTS, Plus1]"),
   make_option(c("-s", "--sites"), type="character", default=NULL, 
@@ -411,6 +412,40 @@ switch(genome,
          
          # Get hg19 annotations
          ensembl = useMart(host='feb2014.archive.ensembl.org', 
+                           biomart='ENSEMBL_MART_ENSEMBL', 
+                           dataset='hsapiens_gene_ensembl')
+         # listFilters(mart=ensembl)
+         
+         annot = getBM(c("refseq_mrna", "chromosome_name", "strand", "transcript_start", "transcript_end"), mart=ensembl)
+         annot = annot[! (annot$refseq_mrna == ''), ]
+         
+         strand = annot$strand
+         txStart = annot$transcript_start
+         txEnd = annot$transcript_end
+         
+         TSS = txStart
+         TTS = txEnd
+         TSS[strand == -1] = txEnd[strand == -1]
+         TTS[strand == -1] = txStart[strand == -1]
+         
+         annotations = data.frame(Transcript = annot$refseq_mrna, 
+                                  Chr = paste("chr", annot$chromosome_name, sep=""), 
+                                  Strand = strand,
+                                  TSS = TSS,
+                                  TTS = TTS)
+       },
+       hg38={
+         chrLen = c(248956422,242193529,198295559,190214555,181538259,170805979,159345973,145138636,138394717,133797422,135086622,133275309,114364328,107043718,101991189,90338345,83257441,80373285,58617616,64444167,46709983,50818468,156040895,57227415)
+         names(chrLen) = c("chr1","chr2","chr3","chr4","chr5","chr6","chr7","chr8","chr9","chr10","chr11","chr12","chr13","chr14","chr15","chr16","chr17","chr18","chr19","chr20","chr21","chr22","chrX","chrY")
+         
+         # Get human annotations
+         suppressPackageStartupMessages(library(biomaRt))
+         
+         # listMarts(host='oct2018.archive.ensembl.org') # use this host for getting the annotations for hg38 (GRCh38)
+         # other Ensembl archives: http://www.ensembl.org/info/website/archives/index.html
+         
+         # Get hg38 annotations
+         ensembl = useMart(host='oct2018.archive.ensembl.org', 
                            biomart='ENSEMBL_MART_ENSEMBL', 
                            dataset='hsapiens_gene_ensembl')
          # listFilters(mart=ensembl)
