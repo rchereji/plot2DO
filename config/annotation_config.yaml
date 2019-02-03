@@ -1,0 +1,400 @@
+
+annotations:
+  sacCer3:
+    chromosome_size: 
+      url: http://hgdownload.cse.ucsc.edu/goldenPath/sacCer3/database/chromInfo.txt.gz
+      filter:
+        - chrI
+        - chrII
+        - chrIII
+        - chrIV
+        - chrV
+        - chrVI
+        - chrVII
+        - chrVIII
+        - chrIX
+        - chrX
+        - chrXI
+        - chrXII
+        - chrXIII
+        - chrXIV
+        - chrXV
+        - chrXVI
+      path: Annotations/sacCer3_chromInfo.txt  
+    file:
+      path: Annotations/sacCer3_annotations.csv
+  EF2:
+    chromosome_size: 
+      path: Annotations/EF2_chromInfo.txt  
+    mart:
+      host: fungi.ensembl.org
+      biomart: fungi_mart
+      dataset: spombe_eg_gene
+      attributes:
+        - refseq_mrna
+        - chromosome_name
+        - strand
+        - transcript_start
+        - transcript_end
+      attributeId: refseq_mrna
+      vars: # required. format: "variable name: mart attibute name"
+          strand: strand
+          txStart: transcript_start
+          txEnd: transcript_end
+          chrName: chromosome_name
+  tair10:
+    chromosome_size: 
+      url: https://genome-test.gi.ucsc.edu/~hiram/hubs/Plants/araTha1/araTha1.chrom.sizes
+      filter:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+      path: Annotations/tair10_chromInfo.txt  
+    mart:
+      host: plants.ensembl.org
+      biomart: plants_mart
+      dataset: athaliana_eg_gene
+      attributes:
+        - ensembl_transcript_id
+        - chromosome_name
+        - strand
+        - transcript_start
+        - transcript_end
+      attributeId: ensembl_transcript_id
+      vars: # required. format: "variable name: mart attibute name"
+          strand: strand
+          txStart: transcript_start
+          txEnd: transcript_end
+          chrName: chromosome_name
+  dm3:
+    chromosome_size: 
+      url: http://hgdownload.cse.ucsc.edu/goldenPath/dm3/database/chromInfo.txt.gz
+      filter:
+        - chr2L
+        - chr2R
+        - chr3L
+        - chr3R
+        - chr4
+        - chrX
+      path: Annotations/dm3_chromInfo.txt  
+    mart:
+      host: dec2014.archive.ensembl.org
+      biomart: ENSEMBL_MART_ENSEMBL
+      dataset: dmelanogaster_gene_ensembl
+      attributes:
+        - refseq_mrna
+        - chromosome_name
+        - strand
+        - transcript_start
+        - transcript_end
+      attributeId: refseq_mrna
+      vars: # required. format: "variable name: mart attibute name"
+        strand: strand
+        txStart: transcript_start
+        txEnd: transcript_end
+        chrName: chromosome_name
+  dm6:
+    chromosome_size: 
+      url: http://hgdownload.cse.ucsc.edu/goldenPath/dm6/database/chromInfo.txt.gz
+      filter:
+        - 2L
+        - 2R
+        - 3L
+        - 3R
+        - 4
+        - X
+        - Y
+        - rDNA
+      path: Annotations/dm6_chromInfo.txt  
+    mart:
+      host: may2017.archive.ensembl.org
+      biomart: ENSEMBL_MART_ENSEMBL
+      dataset: dmelanogaster_gene_ensembl
+      attributes:
+        - refseq_mrna
+        - chromosome_name
+        - strand
+        - transcript_start
+        - transcript_end
+      attibuteId: refseq_mrna
+      vars: # required. format: "variable name: mart attibute name"
+        strand: strand
+        txStart: transcript_start
+        txEnd: transcript_end
+        chrName: chromosome_name      
+  ce10:
+    chromosome_size: 
+      url: http://hgdownload.cse.ucsc.edu/goldenPath/ce10/database/chromInfo.txt.gz
+      filter:
+        - chrI
+        - chrII
+        - chrIII
+        - chrIV
+        - chrV
+        - chrX
+      path: Annotations/ce10_chromInfo.txt  
+    mart:
+      host: may2012.archive.ensembl.org
+      biomart: ENSEMBL_MART_ENSEMBL
+      dataset: celegans_gene_ensembl
+      attributes:
+        - refseq_mrna 
+        - chromosome_name
+        - strand
+        - transcript_start
+        - transcript_end
+      attributeId: refseq_mrna
+      vars: # required. format: "variable name: mart attibute name"
+        strand: strand
+        txStart: transcript_start
+        txEnd: transcript_end
+        chrName: chromosome_name      
+  ce11:
+    chromosome_size: 
+      url: http://hgdownload.cse.ucsc.edu/goldenPath/ce11/database/chromInfo.txt.gz
+      filter:
+        - chrI
+        - chrII
+        - chrIII
+        - chrIV
+        - chrV
+        - chrX
+      path: Annotations/ce11_chromInfo.txt  
+    mart:
+      host: may2017.archive.ensembl.org
+      biomart: ENSEMBL_MART_ENSEMBL
+      dataset: celegans_gene_ensembl
+      attributes:
+        - refseq_mrna
+        - chromosome_name
+        - strand
+        - transcript_start
+        - transcript_end
+      attributeId: refseq_mrna
+      vars: # required. format: "variable name: mart attibute name"
+        strand: strand
+        txStart: transcript_start
+        txEnd: transcript_end
+        chrName: chromosome_name      
+  mm9:
+    chromosome_size: 
+      url: http://hgdownload.cse.ucsc.edu/goldenPath/mm9/database/chromInfo.txt.gz 
+      filter:
+        - chr1
+        - chr2
+        - chr3
+        - chr4
+        - chr5
+        - chr6
+        - chr7
+        - chr8
+        - chr9
+        - chr10
+        - chr11
+        - chr12
+        - chr13
+        - chr14
+        - chr15
+        - chr16
+        - chr17
+        - chr18
+        - chr19
+        - chrX
+        - chrY
+      path: Annotations/mm9_chromInfo.txt  
+    mart:
+      host: may2012.archive.ensembl.org
+      biomart: ENSEMBL_MART_ENSEMBL
+      dataset: mmusculus_gene_ensembl
+      attributes:
+        - refseq_mrna
+        - chromosome_name
+        - strand
+        - transcript_start
+        - transcript_end
+      attributeId: refseq_mrna
+      vars: # required. format: "variable name: mart attibute name"
+        strand: strand
+        txStart: transcript_start
+        txEnd: transcript_end
+        chrName: chromosome_name      
+  mm10:
+    chromosome_size: 
+      url: http://hgdownload.cse.ucsc.edu/goldenPath/mm10/database/chromInfo.txt.gz
+      filter:
+        - chr1
+        - chr2
+        - chr3
+        - chr4
+        - chr5
+        - chr6
+        - chr7
+        - chr8
+        - chr9
+        - chr10
+        - chr11
+        - chr12
+        - chr13
+        - chr14
+        - chr15
+        - chr16
+        - chr17
+        - chr18
+        - chr19
+        - chrX
+        - chrY      
+      path: Annotations/mm10_chromInfo.txt  
+    mart:
+      # host: 
+      biomart: ENSEMBL_MART_ENSEMBL
+      dataset: mmusculus_gene_ensembl
+      attributes:
+        - refseq_mrna
+        - chromosome_name
+        - strand
+        - transcript_start
+        - transcript_end
+      attributeId: refseq_mrna
+      vars: # required. format: "variable name: mart attibute name"
+        strand: strand
+        txStart: transcript_start
+        txEnd: transcript_end
+        chrName: chromosome_name      
+  hg18:
+    chromosome_size: 
+      url: http://hgdownload.cse.ucsc.edu/goldenPath/hg18/database/chromInfo.txt.gz
+      filter:
+        - chr1
+        - chr2
+        - chr3
+        - chr4
+        - chr5
+        - chr6
+        - chr7
+        - chr8
+        - chr9
+        - chr10
+        - chr11
+        - chr12
+        - chr13
+        - chr14
+        - chr15
+        - chr16
+        - chr17
+        - chr18
+        - chr19
+        - chr20
+        - chr21
+        - chr22
+        - chrX
+        - chrY
+      path: Annotations/hg18_chromInfo.txt  
+    mart:
+      host: may2009.archive.ensembl.org
+      biomart: ENSEMBL_MART_ENSEMBL
+      dataset: hsapiens_gene_ensembl
+      attributes:
+        - refseq_mrna
+        - chromosome_name
+        - strand
+        - transcript_start
+        - transcript_end
+      attributeId: refseq_mrna
+      vars: # required. format: "variable name: mart attibute name"
+        strand: strand
+        txStart: transcript_start
+        txEnd: transcript_end
+        chrName: chromosome_name      
+  hg19:
+    chromosome_size: 
+      url: http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/chromInfo.txt.gz
+      filter:
+        - chr1
+        - chr2
+        - chr3
+        - chr4
+        - chr5
+        - chr6
+        - chr7
+        - chr8
+        - chr9
+        - chr10
+        - chr11
+        - chr12
+        - chr13
+        - chr14
+        - chr15
+        - chr16
+        - chr17
+        - chr18
+        - chr19
+        - chr20
+        - chr21
+        - chr22
+        - chrX
+        - chrY      
+      path: Annotations/hg19_chromInfo.txt  
+    mart:
+      host: feb2014.archive.ensembl.org
+      biomart: ENSEMBL_MART_ENSEMBL
+      dataset: hsapiens_gene_ensembl
+      attributes:
+        - refseq_mrna
+        - chromosome_name
+        - strand
+        - transcript_start
+        - transcript_end
+      attributeId: refseq_mrna
+      vars: # required. format: "variable name: mart attibute name"
+        strand: strand
+        txStart: transcript_start
+        txEnd: transcript_end
+        chrName: chromosome_name      
+  hg38:
+    chromosome_size: 
+      url: http://hgdownload.cse.ucsc.edu/goldenPath/hg38/database/chromInfo.txt.gz
+      filter:
+        - chr1
+        - chr2
+        - chr3
+        - chr4
+        - chr5
+        - chr6
+        - chr7
+        - chr8
+        - chr9
+        - chr10
+        - chr11
+        - chr12
+        - chr13
+        - chr14
+        - chr15
+        - chr16
+        - chr17
+        - chr18
+        - chr19
+        - chr20
+        - chr21
+        - chr22
+        - chrX
+        - chrY      
+      path: Annotations/hg38_chromInfo.txt  
+    mart:
+      host: # feb2014.archive.ensembl.org
+      biomart: ENSEMBL_MART_ENSEMBL
+      dataset: hsapiens_gene_ensembl
+      attributes:
+        - refseq_mrna
+        - chromosome_name
+        - strand
+        - transcript_start
+        - transcript_end
+      attributeId: refseq_mrna
+      vars: # required. format: "variable name: mart attibute name"
+        strand: strand
+        txStart: transcript_start
+        txEnd: transcript_end
+        chrName: chromosome_name      
+      
