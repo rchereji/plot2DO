@@ -1,50 +1,27 @@
-# libraries:
+# Libraries to install:
+# Bioconductor: GenomicRanges, IRanges, rtracklayer, AnnotationHub, biomaRt, Rsamtools
+# CRAN: yaml, optparse, ggplot2, reshape2, colorRamps, gridExtra
 
-# biocmanager:
-# library(GenomicRanges)
-# library(IRanges)
-# library(rtracklayer)
-# library(AnnotationHub)
-# library(biomaRt)
-# library(Rsamtools)
-
-# cran:
-# library(yaml)
-# library(optparse)
-# library(ggplot2)
-# library(reshape2)
-# library(colorRamps)
-# library(gridExtra)
-
-# R core:
-# library(tools)
-# library(grid)
+# R core libraries (do not need installation): tools, grid
 
 
-# TODO: download required data (bam files)???
-
-
-#TODO: create empty folders for annotations and bam files:
-
-
-
-biocManagerLibraries <- c("GenomicRanges", "IRanges", "rtracklayer", "AnnotationHub",
+bioconductorLibraries <- c("GenomicRanges", "IRanges", "rtracklayer", "AnnotationHub",
                           "biomaRt", "Rsamtools")
 
 cranLibraries <- c("yaml", "optparse", "ggplot2", "reshape2", "colorRamps", "gridExtra")
 
-
+# Install Bioconductor packages
 if (!requireNamespace("BiocManager", quietly = TRUE)){
   install.packages("BiocManager")
 }
-sapply(biocManagerLibraries, function(x) {
+sapply(bioconductorLibraries, function(x) {
   if (requireNamespace(x, quietly = TRUE)){
     result <- "already installed"
   } else {
     BiocManager::install(x)
     success <- requireNamespace(x, quietly = TRUE)
     if(success) { 
-      result <- "successful instalation"
+      result <- "successful installation"
     } else {
       result <- "error"
     }    
@@ -52,20 +29,18 @@ sapply(biocManagerLibraries, function(x) {
   return(result)
 })
 
+# Install CRAN packages
 sapply(cranLibraries, function(x) {
   if (requireNamespace(x, quietly = TRUE)){
     result <- "already installed"
   } else {
-    install.packages(x)
+    install.packages(x, repos="http://cloud.r-project.org")
     success <- requireNamespace(x, quietly = TRUE)
     if(success) { 
-      result <- "successful instalation"
+      result <- "successful installation"
     } else {
       result <- "error"
     }
   }  
   return(result)
 })
-
-
-
