@@ -8,7 +8,11 @@
 # v1.0.5 - refactor
 
 # load app config values:
-library(yaml)
+
+suppressPackageStartupMessages({
+  library(yaml)
+})
+
 config <- yaml.load_file("config/config.yaml")
 
 sourceBasePath <- config$application$paths$source
@@ -18,7 +22,8 @@ if(is.null(sourceBasePath)) {
 
 readsBasePath <- config$application$paths$reads
 if(is.null(readsBasePath)) {
-  readsBasePath <- file.path(getwd(), "data")
+  #readsBasePath <- file.path(getwd(), "data")
+  readsBasePath <- file.path(getwd(), "Sample_BAM_files")
 }
 
 testOutputBasePath <- config$application$paths$outTests

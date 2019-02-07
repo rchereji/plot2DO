@@ -1,4 +1,6 @@
-library("optparse")
+suppressPackageStartupMessages({
+  library("optparse")
+})
 
 CreateOptionsParser <- function(){
   

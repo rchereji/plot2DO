@@ -1,9 +1,11 @@
-library(ggplot2)
-library(reshape2)
-library(colorRamps)
-library(grid)
-library(gridExtra)
-library(yaml)
+suppressPackageStartupMessages({
+  library(ggplot2)
+  library(reshape2)
+  library(colorRamps)
+  library(grid)
+  library(gridExtra)
+  library(yaml)
+})
 
 #debug parameters
 # source("/home/paulati/Documents/ingebi/2018/razvan/plot2DO-develop/config.R")

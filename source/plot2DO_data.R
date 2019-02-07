@@ -1,4 +1,3 @@
-
 suppressPackageStartupMessages({
   library(tools)
   library(AnnotationHub)

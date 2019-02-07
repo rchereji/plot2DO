@@ -1,6 +1,8 @@
-library(GenomicRanges)
-library(IRanges)
-library(rtracklayer)
+suppressPackageStartupMessages({
+  library(GenomicRanges)
+  library(IRanges)
+  library(rtracklayer)
+})
 
 # NUM_CORES <- detectCores(all.tests = FALSE, logical = TRUE) - 1
 # print(NUM_CORES)
