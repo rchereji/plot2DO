@@ -23,7 +23,7 @@ if(is.null(sourceBasePath)) {
 readsBasePath <- config$application$paths$reads
 if(is.null(readsBasePath)) {
   #readsBasePath <- file.path(getwd(), "data")
-  readsBasePath <- file.path(getwd(), "Sample_BAM_files")
+  readsBasePath <- getwd()
 }
 
 testOutputBasePath <- config$application$paths$outTests
