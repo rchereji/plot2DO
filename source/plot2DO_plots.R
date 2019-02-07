@@ -237,7 +237,9 @@ GetHeatmapLegend<-function(myggplot){
 #                        beforeRef, afterRef, sampleName,
 #                        plotType, lengthHist)
 PlotFigure <- function(params)  {
-  
+
+  suppressWarnings({
+    
   dataFilePath <- getOutputMatrixFilePath(params$plotType, params$referencePointsBed, 
                                           params$reference, params$siteLabel, 
                                           params$lMin, params$lMax, params$sampleName)
@@ -308,6 +310,7 @@ PlotFigure <- function(params)  {
                                         lMin, lMax, sampleName)
   ggsave(plotFilePath, result.grob, width = graphicalParams$plotWidth, height = graphicalParams$plotHeight, 
          units = "cm", dpi = 300, scale = 1)   
+  })
   
 }
 

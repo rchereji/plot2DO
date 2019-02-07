@@ -5,7 +5,3 @@ application:
     reads:
     annotations:
     outTests:
-    # source: /home/paulati/Documents/ingebi/2018/razvan/plot2DO-develop/github
-    # reads: /home/paulati/Documents/ingebi/2018/razvan/plot2DO-develop/github/data
-    # annotations: /home/paulati/Documents/ingebi/2018/razvan/plot2DO-develop/github
-    # outTests: /home/paulati/Documents/ingebi/2018/razvan/plot2DO-develop/tests

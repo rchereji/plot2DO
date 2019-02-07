@@ -18,7 +18,7 @@ Main <- function(command_line_args=NA)
   
   annotations <- LoadGenomeAnnotation(params$genome)
   
-  rawReads <- LoadReads(params$inputFilename, params$genome, annotations)
+  rawReads <- LoadReads(params$inputFilePath, params$genome, annotations)
   
   reads <- CleanReads(rawReads, annotations$chrLen, params$lMin, params$lMax)
 
@@ -43,8 +43,10 @@ InitializeParams <- function(opt) {
   # Genome
   genome <- opt$genome
   
+  inputFilePath <- opt$file
+  
   # Data file name
-  inputFilename <- opt$file
+  inputFilename <- basename(inputFilePath)
   
   # Reference label
   siteLabel <- opt$siteLabel
@@ -67,6 +69,7 @@ InitializeParams <- function(opt) {
   afterRef <- opt$downstream   # length of the downstream region that will be plotted
   
   inputType = toupper(file_ext(inputFilename))
+  
   sampleName <- switch(inputType,
                         BED={
                           sampleName <- sub(".bed", "", inputFilename)
@@ -97,7 +100,8 @@ InitializeParams <- function(opt) {
   }
   
   result <- list(plotType = plotType, genome = genome, align = align,
-                 inputFilename = inputFilename, sampleName = sampleName,
+                 inputFilename = inputFilename, inputFilePath = inputFilePath, 
+                 sampleName = sampleName,
                  reference = selectedReference, siteLabel = siteLabel,
                  referencePointsBed = referencePointsBed, 
                  lMin = lMin, lMax = lMax, 
