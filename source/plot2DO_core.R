@@ -215,7 +215,7 @@ CalculatePlotData <- function(params, reads, referenceGRanges) {
   coverageWeight <- Normalization(resized_reads)
   occMatrix <- Occupancy(params$lMin, params$lMax, params$beforeRef, params$afterRef, 
                          resized_reads, coverageWeight, referenceGRanges, readLength)
-  outputFilePath <- getOutputMatrixFilePath(params$plotType, params$referencePointsBed, 
+  outputFilePath <- GetOutputMatrixFilePath(params$plotType, params$referencePointsBed, 
                                             params$reference, params$siteLabel, 
                                             params$lMin, params$lMax, params$sampleName)
   

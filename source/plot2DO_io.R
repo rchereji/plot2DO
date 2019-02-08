@@ -69,26 +69,6 @@ CreateOutputFolders <- function(sites, selectedReference, siteLabel) {
   return(folderPath)
 }
 
-SaveOccupancyMatrix <- function(occMatrix, sites, siteLabel, selectedReference, 
-                                  folderPath, 
-                                  lMin, lMax, beforeRef, afterRef, 
-                                  totalNoReads, lengthHist, sampleName) {
-  
-  # Save the 2D Occupancy matrix
-  if (is.null(sites)) {
-    fileNameTail <- selectedReference
-  } else  {
-    fileNameTail <- siteLabel
-  }  
-    
-  fileName <- paste("/threePrime_ends_matrix.", fileNameTail, ".", lMin, "_", lMax, ".", sampleName, ".RData", sep="")
-  filePath <- file.path(folderPath, fileName)
-
-  #save(occ_matrix, lMin, lMax, beforeRef, afterRef, TotalNoReads, LengthHist, sampleName, siteLabel, file=paste("2D_occupancy_", opt$siteLabel, "/threePrime_ends_matrix.", siteLabel, ".", lMin, "_", lMax, ".", sampleName, ".RData", sep=""))
-  save(occMatrix, lMin, lMax, beforeRef, afterRef, totalNoReads, lengthHist, sampleName, siteLabel, file=filePath)
-  
-}
-
 
 # output helper functions:
 
@@ -116,7 +96,7 @@ GetOutputPlotFilePath <- function(plotType, sites, selectedReference, siteLabel,
   
 }
 
-getOutputMatrixFilePath <- function(plotType, sites, selectedReference, siteLabel,
+GetOutputMatrixFilePath <- function(plotType, sites, selectedReference, siteLabel,
                                         lMin, lMax, sampleName){
   
   extension <- ".RData"

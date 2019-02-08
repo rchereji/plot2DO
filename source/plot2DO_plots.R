@@ -240,7 +240,7 @@ PlotFigure <- function(params)  {
 
   suppressWarnings({
     
-  dataFilePath <- getOutputMatrixFilePath(params$plotType, params$referencePointsBed, 
+  dataFilePath <- GetOutputMatrixFilePath(params$plotType, params$referencePointsBed, 
                                           params$reference, params$siteLabel, 
                                           params$lMin, params$lMax, params$sampleName)
   # load data:
