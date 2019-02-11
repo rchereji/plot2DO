@@ -157,7 +157,7 @@ PlotHeatmap <- function(occMatrix, xTitle, yTitle, mainTitle, legendTitle,
   result <- result + labs(x = xTitle, y = yTitle, title = mainTitle)
   
   scaleY <- scale_y_continuous(breaks = yBreaks, labels = yLabels, limits = yLimits,
-                               expand = expand_scale(add = c(-0.2)), position = scaleYPosition,
+                               expand = expand_scale(add = c(-0.5)), position = scaleYPosition,
                                sec.axis = dup_axis())
   scaleX <- scale_x_continuous(breaks = xBreaks, labels = xLabels, limits = xLimits,
                                expand = c(0,0), position = scaleXPosition, 
