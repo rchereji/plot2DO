@@ -30,7 +30,7 @@ Main <- function(command_line_args=NA)
   
   CalculatePlotData(params, reads, referenceGRanges)
 
-  PlotFigure(params)
+  plot <- PlotFigure(params)
   
 }
 

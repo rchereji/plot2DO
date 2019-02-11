@@ -28,7 +28,7 @@ if(is.null(readsBasePath)) {
 
 testOutputBasePath <- config$application$paths$outTests
 if(is.null(testOutputBasePath)) {
-  testOutputBasePath <- file.path(getwd(), "tests")
+  testOutputBasePath <- file.path(getwd(), "output")
 }
 
 annotationsBasePath <- config$application$paths$annotations

@@ -72,10 +72,24 @@ GetPlotTitles <- function(plotConfig, sampleName) {
 }
 
 GetMinorTicksAxisLabels <- function(labels, gapLabelsLength) {
+  paddingLeft <- ""  
+  result <- GetMinorTicksAxisLabelsBase(labels, gapLabelsLength, paddingLeft)
+  return(result)
+}
+
+
+GetMinorTicksAxisLabelsExtraSpace <- function(labels, gapLabelsLength) {
+  #to align plots, heatmap uses 3 digits per label  
+  paddingLeft <- " "  
+  result <- GetMinorTicksAxisLabelsBase(labels, gapLabelsLength, paddingLeft)
+  return(result)
+}
+
+GetMinorTicksAxisLabelsBase <- function(labels, gapLabelsLength, paddingLeft) {
   result <- c()
   i <- 1    
   while(i <= length(labels)) {
-    label <- labels[i]
+    label <- paste0(paddingLeft, labels[i]) 
     toProcessLength <- length(labels) - length(result)
     if(toProcessLength > gapLabelsLength) {
       effectiveGapLength <- gapLabelsLength  
@@ -86,9 +100,9 @@ GetMinorTicksAxisLabels <- function(labels, gapLabelsLength) {
     result <- c(result, label, gap)
     i <- i + effectiveGapLength + 1
   }
-
   return(result)
 }
+
 
 # debug:
 # xTitle <- heatmapTitles$xTitle
@@ -137,12 +151,13 @@ PlotHeatmap <- function(occMatrix, xTitle, yTitle, mainTitle, legendTitle,
                                     ticks.colour = "black", ticks.linewidth = 0.5, 
                                     label.position = "left", 
                                     title.theme = legendTitleTheme,
-                                    label.theme = legendLabelTheme)  
+                                    label.theme = legendLabelTheme,
+                                    barheight = 8)  
   
   result <- result + labs(x = xTitle, y = yTitle, title = mainTitle)
   
   scaleY <- scale_y_continuous(breaks = yBreaks, labels = yLabels, limits = yLimits,
-                               expand = c(0,0), position = scaleYPosition,
+                               expand = expand_scale(add = c(-0.2)), position = scaleYPosition,
                                sec.axis = dup_axis())
   scaleX <- scale_x_continuous(breaks = xBreaks, labels = xLabels, limits = xLimits,
                                expand = c(0,0), position = scaleXPosition, 
@@ -165,10 +180,10 @@ PlotAverageOccupancy <- function(occMatrix, beforeRef, afterRef, xTitle, yTitle,
   avgOcc.df$x <- seq(-beforeRef, afterRef, 1)
   
   yBreaks <- seq(0, 1.1*max(avgOcc), 0.2)
-  yLabels <- GetMinorTicksAxisLabels(as.character(yBreaks), 1)  # yBreaks
+  yLabels <- GetMinorTicksAxisLabelsExtraSpace(as.character(yBreaks), 1)  # yBreaks
   yLimits <- c(0, 1.1*max(avgOcc))
   xBreaks <- seq(-beforeRef, afterRef, 100)
-  xLabels <- GetMinorTicksAxisLabels(as.character(xBreaks), 4) # xBreaks
+  xLabels <- GetMinorTicksAxisLabelsExtraSpace(as.character(xBreaks), 4) # xBreaks
   xLimits <- c(-beforeRef, afterRef)
   
   xlineInterceps <- c(-500, 0, 500)
@@ -243,6 +258,7 @@ PlotFigure <- function(params)  {
   dataFilePath <- GetOutputMatrixFilePath(params$plotType, params$referencePointsBed, 
                                           params$reference, params$siteLabel, 
                                           params$lMin, params$lMax, params$sampleName)
+
   # load data:
   load(dataFilePath)
   # load occMatrix + histogram + ...
@@ -309,9 +325,11 @@ PlotFigure <- function(params)  {
                                         params$reference, siteLabel, 
                                         lMin, lMax, sampleName)
   ggsave(plotFilePath, result.grob, width = graphicalParams$plotWidth, height = graphicalParams$plotHeight, 
-         units = "cm", dpi = 300, scale = 1)   
+         units = "in", dpi = 300, scale = 1)   
   })
   
+  return(result.grob)
+    
 }
 
 GetGraphicalParams <- function(simplifyPlot, squeezePlot) {
@@ -319,13 +337,11 @@ GetGraphicalParams <- function(simplifyPlot, squeezePlot) {
   baseTheme <- theme_bw() + theme(
     panel.grid.major = element_blank(), 
     panel.grid.minor = element_blank(),
-    plot.title = element_text(size = 9, hjust = 0.5),
-    axis.text.x = element_text(size = 8, angle = 0, hjust = 0.5,  vjust = 0.5),
-    axis.title = element_text(size = 8, hjust = 0.5, vjust = 0.5),
-    #axis.title.x = element_text(size = 6, margin = margin(t = 0, r = 0, b = 0, l = 0)),
-    axis.text.y = element_text(size = 8, angle = 0, hjust = 0.5,  vjust = 0.5),
-    #axis.title.y = element_text(size = 6, margin = margin(t = 0, r = 0, b = 0, l = 0)),
-    axis.ticks = element_line(size = 0.2)
+    plot.title = element_text(size = 12, hjust = 0.5),
+    axis.text.x = element_text(size = 11, angle = 0, hjust = 0.5,  vjust = 0.5),
+    axis.title = element_text(size = 12, hjust = 0.5, vjust = 0.5),
+    axis.text.y = element_text(size = 11, angle = 0, hjust = 0.5,  vjust = 0.5)
+    #axis.ticks = element_line(size = 0.2)
   )
   
   # TODO: move to config ?
@@ -334,26 +350,24 @@ GetGraphicalParams <- function(simplifyPlot, squeezePlot) {
       layout <- cbind(c(1, 1, 1), c(1, 1, 1))
       gridWidths <- c(1, 1)
       gridHeights <- c(1, 1, 1)
-      plotWidth <- 14 # 5.5 
-      plotHeight <- 20
+      plotWidth <- 5.5 #14
+      plotHeight <- 8  #20
     } else {
       layout <- cbind(c(1))
       gridWidths <- c(1)
       gridHeights <- c(1)
-      plotWidth <- 18
-      plotHeight <- 15
+      plotWidth <- 7  #18
+      plotHeight <- 6 #15
     }
     
     scaleXPosition <- "bottom"
     scaleYPosition <- "left"
     
     heatmapTheme <- baseTheme + theme(legend.position="right",
-                                      axis.line.x.top = element_line(color="white"),
-                                      axis.ticks.x.top = element_line(color="white"),
+                                      axis.ticks.x.top = element_line(size = 0, color="white"),                                      
                                       axis.text.x.top = element_text(color="white"),
                                       axis.title.x.top = element_text(color="white"),
-                                      axis.line.y.right = element_line(color="white"),
-                                      axis.ticks.y.right = element_line(color="white"),
+                                      axis.ticks.y.right = element_line(size = 0, color="white"),                                      
                                       axis.text.y.right = element_text(color="white"),
                                       axis.title.y.right = element_text(color="white"))
     avgOccupancyTheme <- NA
@@ -362,52 +376,43 @@ GetGraphicalParams <- function(simplifyPlot, squeezePlot) {
   } else {
     
     layout <- cbind(c(NA, 4, 4), c(1,2,2), c(NA,3,3))  
-    gridWidths <- c(0.25, 2, 1)
+    gridWidths <- c(0.5, 2, 1)
     gridHeights <- c(1, 1, 1)
-    plotWidth <- 21 
-    plotHeight <- 18
+    plotWidth <- 10 #25
+    plotHeight <- 7 #18
     
     scaleXPosition <- "top"
     scaleYPosition <- "right"
-    
+
     # i have to duplicate axis and add element text to align all the plots.
-    # they should use tha space but not be shown
-    heatmapTheme <- baseTheme + theme(legend.position="left",
-                                      plot.title = element_blank(), 
-                                      axis.title.x = element_text(),
-                                      axis.title.y = element_text(),
-                                      axis.line.x.bottom = element_line(color="white"),
-                                      axis.ticks.x.bottom = element_line(color="white"), 
-                                      axis.text.x.top = element_text(color="white"),
-                                      axis.title.x.top = element_text(color="white"),
+    # they should use that space but not be shown
+    heatmapTheme <- baseTheme + theme( plot.title = element_blank(),                                                                           
+                                      axis.ticks.x.bottom = element_line(size = 0, color="white"),                                      
+                                      axis.ticks.y.left = element_line(size = 0, color="white"),
+                                      axis.text.y.left = element_text(color="white"),                                      
+                                      axis.text.x.bottom = element_text(color = "white"),
                                       axis.title.x.bottom = element_text(color="white"),
-                                      axis.line.y.left = element_line(color="white"),
-                                      axis.ticks.y.left = element_line(color="white"),
-                                      axis.text.y.left = element_text(color="white"),
+                                      axis.title.x.top = element_text(color="white"),                                      
                                       axis.title.y.left = element_text(color="white"),
                                       axis.title.y.right = element_text(color="white"))
     
-    avgOccupancyTheme <- baseTheme + theme( axis.line.x.top = element_line(color="white"),
-                                            axis.ticks.x.top = element_line(color="white"), 
+    avgOccupancyTheme <- baseTheme + theme( axis.ticks.x.top = element_line(size = 0, color="white"),
                                             axis.text.x.top = element_text(color="white"),
-                                            axis.title.x.top = element_text(colour = "white"),
-                                            axis.line.y.right = element_line(color="white"),
-                                            axis.ticks.y.right = element_line(color="white"),
+                                            axis.title.x.top = element_text(colour = "white"),                                            
+                                            axis.ticks.y.right = element_line(size = 0, color="white"),
                                             axis.text.y.right = element_text(color="white"),
                                             axis.title.y.right = element_text(colour = "white"))
     
-    fragmentLengthTheme <- baseTheme + theme( axis.line.x.top = element_line(color="white"),
-                                             axis.ticks.x.top = element_line(color="white"), 
+    fragmentLengthTheme <- baseTheme + theme( axis.ticks.x.top = element_line(size = 0, color="white"),
                                              axis.text.x.top = element_text(color="white"),
-                                             axis.title.x.top = element_text(colour = "white"),
-                                             axis.line.y.right = element_line(color="white"),
-                                             axis.ticks.y.right = element_line(color="white"),
+                                             axis.title.x.top = element_text(colour = "white"),                                             
+                                             axis.ticks.y.right = element_line(size = 0, color="white"),
                                              axis.text.y.right = element_text(color="white"),
                                              axis.title.y.right = element_text(colour = "white"))
   }  
 
-  legendTitleTheme <- element_text(size = 8, angle = 90, hjust = 0.5)
-  legendLabelTheme <- element_text(size = 8, angle = 0)
+  legendTitleTheme <- element_text(size = 11, angle = 90, hjust = 0.5, vjust = 0.5)
+  legendLabelTheme <- element_text(size = 11, angle = 0, hjust = 0.5)
   
       
   result = list(layout = layout, 
