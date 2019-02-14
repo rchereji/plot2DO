@@ -382,7 +382,7 @@ annotations:
         - chrY      
       path: Annotations/hg38_chromInfo.txt  
     mart:
-      host: grch37.ensembl.org
+      host: oct2018.archive.ensembl.org
       biomart: ENSEMBL_MART_ENSEMBL
       dataset: hsapiens_gene_ensembl
       attributes:

@@ -103,6 +103,32 @@ GetMinorTicksAxisLabelsBase <- function(labels, gapLabelsLength, paddingLeft) {
   return(result)
 }
 
+GetHeatmapBreaksAndLabels <- function(occMatrix, colorScaleMax) {
+
+    if(is.null(colorScaleMax)) {
+        maxValue <-  max(occMatrix+1e-10)
+    } else {
+        maxValue <- colorScaleMax      
+    }
+
+    if(maxValue > 0.1) {
+        step <- 0.05
+    } else if(maxValue > 0.05) {
+        step <- 0.01
+    } else {
+        step <- 0.005
+    }
+        
+    breaks <- seq(0, maxValue, step)
+    
+    labels <- 100 * breaks    
+    
+    limits <- c(0, maxValue)
+    
+    result <- list(breaks = breaks, labels = labels, limits = limits)
+    
+    return(result)
+}
 
 # debug:
 # xTitle <- heatmapTitles$xTitle
@@ -118,21 +144,25 @@ GetMinorTicksAxisLabelsBase <- function(labels, gapLabelsLength, paddingLeft) {
 PlotHeatmap <- function(occMatrix, xTitle, yTitle, mainTitle, legendTitle,
                         beforeRef, afterRef, lMin, lMax, 
                         customTheme, legendTitleTheme, legendLabelTheme, 
-                        scaleXPosition, scaleYPosition) {
+                        scaleXPosition, scaleYPosition, colorScaleMax) {
   
   # interpolate = TRUE suaviza los pixels
   occMatrixMelt <- melt(t(occMatrix))
   
   # TODO: pasar a configuracion
-  legend.ticks.count <- 5
-  breaks.size <- round((max(occMatrixMelt$value) - min(occMatrixMelt$value)) / legend.ticks.count, 3)
-  breaks <- c(0:(legend.ticks.count - 1)) * breaks.size
-  labels <- 100 * breaks # relative %
+  #legend.ticks.count <- 5
+  #breaks.size <- round((max(occMatrixMelt$value) - min(occMatrixMelt$value)) / legend.ticks.count, 3)
+  #breaks <- c(0:(legend.ticks.count - 1)) * breaks.size
+  #labels <- 100 * breaks # relative %
   
+  breaksLabels <- GetHeatmapBreaksAndLabels(occMatrix, colorScaleMax)
+    
   result <- ggplot(occMatrixMelt, aes(Var1, Var2, fill = value)) + 
     geom_raster(aes(fill = value), interpolate = TRUE) + 
     scale_color_gradientn(colors = matlab.like(100), aesthetics = "fill", 
-                          breaks = breaks, labels = labels) # + plotTheme 
+                          breaks = breaksLabels$breaks, 
+                          labels = breaksLabels$labels,
+                          limits = breaksLabels$limits)
   
   xbreaks.num <- 20
   step <- (afterRef + beforeRef) / xbreaks.num
@@ -152,12 +182,15 @@ PlotHeatmap <- function(occMatrix, xTitle, yTitle, mainTitle, legendTitle,
                                     label.position = "left", 
                                     title.theme = legendTitleTheme,
                                     label.theme = legendLabelTheme,
-                                    barheight = 8)  
+                                    label.vjust = 0.5,
+                                    label.hjust = 0,
+                                    barheight = 8,                                    
+                                    nbin = 1000)  # necessary to shift zero tick to bottom
   
   result <- result + labs(x = xTitle, y = yTitle, title = mainTitle)
   
   scaleY <- scale_y_continuous(breaks = yBreaks, labels = yLabels, limits = yLimits,
-                               expand = expand_scale(add = c(-0.5)), position = scaleYPosition,
+                               expand = c(0,0), position = scaleYPosition,
                                sec.axis = dup_axis())
   scaleX <- scale_x_continuous(breaks = xBreaks, labels = xLabels, limits = xLimits,
                                expand = c(0,0), position = scaleXPosition, 
@@ -261,12 +294,9 @@ PlotFigure <- function(params)  {
 
   # load data:
   load(dataFilePath)
-  # load occMatrix + histogram + ...
-  
-  # paula TODO: ver por que hay valores negativos:
-  occMatrix[occMatrix < 0] = 0 # eliminate rounding errors
-  
-  # paula TODO: ???
+  # load occMatrix + histogram + beforeRef + afterRef + lMin + lMax,
+      
+  occMatrix[occMatrix < 0] = 0 # eliminate rounding  params$colorScaleMax
   if (! is.null(params$colorScaleMax)) {
     occMatrix[occMatrix >= params$colorScaleMax] = params$colorScaleMax - 1e-10   # set a maximum threshold for the 2D Occ matrix
   }
@@ -282,7 +312,8 @@ PlotFigure <- function(params)  {
                          beforeRef, afterRef, lMin, lMax, 
                          graphicalParams$heatmapTheme, graphicalParams$legendTitleTheme,
                          graphicalParams$legendLabelTheme,
-                         graphicalParams$scaleXPosition, graphicalParams$scaleYPosition)
+                         graphicalParams$scaleXPosition, graphicalParams$scaleYPosition,
+                         params$colorScaleMax)
 
   if(params$simplifyPlot) { 
     avgOccupancy <- NA
@@ -377,7 +408,7 @@ GetGraphicalParams <- function(simplifyPlot, squeezePlot) {
     
     layout <- cbind(c(NA, 4, 4), c(1,2,2), c(NA,3,3))  
     gridWidths <- c(0.5, 2, 1)
-    gridHeights <- c(1, 1, 1)
+    gridHeights <- c(1.2, 1, 1)
     plotWidth <- 10 #25
     plotHeight <- 7 #18
     
@@ -398,7 +429,8 @@ GetGraphicalParams <- function(simplifyPlot, squeezePlot) {
     
     avgOccupancyTheme <- baseTheme + theme( axis.ticks.x.top = element_line(size = 0, color="white"),
                                             axis.text.x.top = element_text(color="white"),
-                                            axis.title.x.top = element_text(colour = "white"),                                            
+                                            axis.title.x.top = element_text(colour = "white"),
+                                            axis.title.x.bottom = element_text(margin = margin(t = 20, r = 0, b = 0, l = 0)),
                                             axis.ticks.y.right = element_line(size = 0, color="white"),
                                             axis.text.y.right = element_text(color="white"),
                                             axis.title.y.right = element_text(colour = "white"))
@@ -408,13 +440,13 @@ GetGraphicalParams <- function(simplifyPlot, squeezePlot) {
                                              axis.title.x.top = element_text(colour = "white"),                                             
                                              axis.ticks.y.right = element_line(size = 0, color="white"),
                                              axis.text.y.right = element_text(color="white"),
-                                             axis.title.y.right = element_text(colour = "white"))
+                                             axis.title.y.right = element_text(colour = "white"),
+                                             axis.title.y.left = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0)))
   }  
 
-  legendTitleTheme <- element_text(size = 11, angle = 90, hjust = 0.5, vjust = 0.5)
+  legendTitleTheme <- element_text(size = 11, angle = 90, hjust = 0.5, vjust = 0.5, margin = margin(t = 0, r = 7, b = 0, l = 0))
   legendLabelTheme <- element_text(size = 11, angle = 0, hjust = 0.5)
-  
-      
+     
   result = list(layout = layout, 
                 gridWidths = gridWidths, gridHeights = gridHeights, 
                 plotWidth = plotWidth, plotHeight = plotHeight, 
