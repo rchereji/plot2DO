@@ -145,7 +145,7 @@ GetPlotsLabels <- function(sampleName, type, reference, site, align) {
   }
       
   heatmapLabels <- list(xTitle = heatmapXLabel, yTitle = heatmapYLabel, legendTitle = heatmapLegend, mainTitle = sampleName)
-  averageLabels <- list(xTitle = averageXLabel, yTitle = averageYLabel, legendTitle = "", mainTitle = "")
+  averageLabels <- list(xTitle = averageXLabel, yTitle = averageYLabel, legendTitle = "", mainTitle = sampleName)
   fragmentLengthLabels <- list(xTitle = fragmentLengthXLabel, yTitle = fragmentLengthYLabel, legendTitle = "", mainTitle = "")
   
   result <- list(heatmap = heatmapLabels, average = averageLabels, fragmentLength = fragmentLengthLabels)
