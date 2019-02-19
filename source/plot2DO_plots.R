@@ -14,61 +14,144 @@ suppressPackageStartupMessages({
 # opt <- LoadArguments(arguments_1)  
 # fin debug parameters
 
-GetPlotsConfig <- function(plotType, selectedReference, siteLabel, align) {
+# GetPlotsConfig <- function(plotType, selectedReference, siteLabel, align) {
+#   
+#   configFilePath <- file.path(configBasePath, "plot_config.yaml")
+#   config <- yaml.load_file(configFilePath)
+#   
+#   plotConfigType <- config$plot[[plotType]] 
+#   if(is.null(plotConfigType)) {
+#     print("error config")  
+#   } else {
+#     
+#     plotConfigSite <- plotConfigType[[siteLabel]] 
+#     if(is.null(plotConfigSite)) {
+#       
+#       plotConfigReference <- plotConfigType[[selectedReference]]
+#       if(is.null(plotConfigReference)) {
+#         print ("config error")
+#       } else {
+#         heatmapConfig <- plotConfigReference$heatmap
+#         averageConfig <- plotConfigReference$average
+#         fragmentLengthConfig <- plotConfigReference$fragmentLength
+#       }
+#       
+#     } else {
+#       plotConfigAlign <- plotConfigSite[[align]]
+#       if(is.null(plotConfigAlign)) {
+#         print ("config error")
+#       } else  {
+#         heatmapConfig <- plotConfigAlign$heatmap
+#         averageConfig <- plotConfigAlign$average
+#         fragmentLengthConfig <- plotConfigAlign$fragmentLength
+#       }
+#     }
+#   }
+#   result <- list(heatmap = heatmapConfig, average = averageConfig,  fragmentLength = fragmentLengthConfig)
+#   return(result)
+#   
+# }
+
+# GetPlotTitles <- function(plotConfig, sampleName) {
+#   
+#   mainTitle <- sampleName
+#   if(is.null(plotConfig)) { #set defaults
+#     xTitle <- ""
+#     yTitle <- ""
+#     legendTitle <- ""
+#   } else { 
+#     xTitle <- plotConfig$xLabel
+#     if(is.null(xTitle)) { xTitle <- "" }
+#     yTitle <- plotConfig$yLabel
+#     if(is.null(yTitle)) { yTitle <- ""  }
+#     legendTitle <- plotConfig$legend
+#     if(is.null(legendTitle)) { legendTitle <- ""  }
+#   }  
+#    result <- list(xTitle = xTitle, yTitle = yTitle, mainTitle = mainTitle, legendTitle = legendTitle)
+#    return(result)  
+#  }
+
+GetPlotsLabels <- function(sampleName, type, reference, site, align) {
   
-  configFilePath <- file.path(configBasePath, "plot_config.yaml")
-  config <- yaml.load_file(configFilePath)
+  #defaults:
+  referenceLabel <- ""
+  typeLabel <- ""
+  alignLabel <- ""
+  siteLabel <- ""
   
-  plotConfigType <- config$plot[[plotType]] 
-  if(is.null(plotConfigType)) {
-    print("error config")  
-  } else {
+  if(type == "OCC") {
     
-    plotConfigSite <- plotConfigType[[siteLabel]] 
-    if(is.null(plotConfigSite)) {
-      
-      plotConfigReference <- plotConfigType[[selectedReference]]
-      if(is.null(plotConfigReference)) {
-        print ("config error")
-      } else {
-        heatmapConfig <- plotConfigReference$heatmap
-        averageConfig <- plotConfigReference$average
-        fragmentLengthConfig <- plotConfigReference$fragmentLength
-      }
-      
-    } else {
-      plotConfigAlign <- plotConfigSite[[align]]
-      if(is.null(plotConfigAlign)) {
-        print ("config error")
-      } else  {
-        heatmapConfig <- plotConfigAlign$heatmap
-        averageConfig <- plotConfigAlign$average
-        fragmentLengthConfig <- plotConfigAlign$fragmentLength
-      }
+    typeLabel <- "occupancy"
+    
+  } else if(type == "DYADS") {
+    
+    typeLabel <- "dyad density"
+    
+  } else if(typeLabel == "fivePrime_ends") {
+    
+    typeLabel <- "5’ ends density"
+    
+  } else if(typeLabel == "threePrime_ends") {
+    
+    typeLabel <- "3’ ends density"
+    
+  }
+  
+  if(reference %in% c("TSS", "TTS")) {
+    
+    referenceLabel <- reference
+    
+  } else if(reference == "Plus1") {
+    
+    referenceLabel <- "+1 nuc."
+    
+  } else if(site != "" & align != "") {
+    
+    siteLabel <- site
+    
+    if(align == "threePrime") {
+      alignLabel <- "3'"
+    } else if( align == "fivePrime") {
+      alignLabel <- "5'"
+    } else if(align == "center") {
+      alignLabel <- "center"
     }
   }
-  result <- list(heatmap = heatmapConfig, average = averageConfig,  fragmentLength = fragmentLengthConfig)
+  
+  if(referenceLabel != "") {
+    
+    heatmapXLabel <- "Fragment length (bp)"
+    heatmapYLabel <- paste0("Position relative to ", referenceLabel, " (bp)")
+    heatmapLegend <- "Relative coverage (%)"
+    
+    fragmentLengthXLabel <- "Fragment length (bp)"
+    fragmentLengthYLabel <- "Percentage (%)"
+    
+    averageXLabel <- paste0("Position relative to ",  referenceLabel, " (bp)")
+    averageYLabel <- paste0("Average ", typeLabel)
+    
+  } else if(siteLabel != "" & alignLabel != "") {
+    
+    heatmapXLabel <- "Fragment length (bp)"
+    heatmapYLabel <- paste0("Position relative to ", alignLabel, " of ", siteLabel, " (bp)")
+    heatmapLegend <- "Relative coverage (%)"
+    
+    fragmentLengthXLabel <- "Fragment length (bp)"
+    fragmentLengthYLabel <- "Percentage (%)"
+    
+    averageXLabel <- paste0("Position relative to ",  alignLabel, " of ", siteLabel, " (bp)")
+    averageYLabel <- paste0("Average ", typeLabel)
+    
+  }
+  
+  heatmapLabels <- list(xTitle = heatmapXLabel, yTitle = heatmapYLabel, legendTitle = heatmapLegend, mainTitle = sampleName)
+  averageLabels <- list(xTitle = averageXLabel, yTitle = averageYLabel, legendTitle = "", mainTitle = "")
+  fragmentLengthLabels <- list(xTitle = fragmentLengthXLabel, yTitle = fragmentLengthYLabel, legendTitle = "", mainTitle = "")
+  
+  result <- list(heatmap = heatmapLabels, average = averageLabels, fragmentLength = fragmentLengthLabels)
+  
   return(result)
   
-}
-
-GetPlotTitles <- function(plotConfig, sampleName) {
-  
-  mainTitle <- sampleName
-  if(is.null(plotConfig)) { #set defaults
-    xTitle <- ""
-    yTitle <- ""
-    legendTitle <- ""
-  } else { 
-    xTitle <- plotConfig$xLabel
-    if(is.null(xTitle)) { xTitle <- "" }
-    yTitle <- plotConfig$yLabel
-    if(is.null(yTitle)) { yTitle <- ""  }
-    legendTitle <- plotConfig$legend
-    if(is.null(legendTitle)) { legendTitle <- ""  }
-  }  
-  result <- list(xTitle = xTitle, yTitle = yTitle, mainTitle = mainTitle, legendTitle = legendTitle)
-  return(result)  
 }
 
 GetMinorTicksAxisLabels <- function(labels, gapLabelsLength) {
@@ -301,9 +384,11 @@ PlotFigure <- function(params)  {
     occMatrix[occMatrix >= params$colorScaleMax] = params$colorScaleMax - 1e-10   # set a maximum threshold for the 2D Occ matrix
   }
   
-  plotsConfig <- GetPlotsConfig(params$plotType, params$reference, siteLabel, params$align)
-
-  heatmapTitles <- GetPlotTitles(plotsConfig$heatmap, sampleName)
+  #plotsConfig <- GetPlotsConfig(params$plotType, params$reference, siteLabel, params$align)
+  plotsConfig <- GetPlotsLabels(sampleName, params$plotType, params$reference, siteLabel, params$align)
+  
+  #heatmapTitles <- GetPlotTitles(plotsConfig$heatmap, sampleName)
+  heatmapTitles <- plotsConfig$heatmap
   
   graphicalParams <- GetGraphicalParams(params$simplifyPlot, params$squeezePlot)
   
@@ -326,12 +411,14 @@ PlotFigure <- function(params)  {
     # grid.draw(result.grob)
   } else {
     
-    averageTitles <- GetPlotTitles(plotsConfig$average, sampleName)
+    # averageTitles <- GetPlotTitles(plotsConfig$average, sampleName)
+    averageTitles <- plotsConfig$average
     avgOccupancy <- PlotAverageOccupancy(occMatrix, beforeRef, afterRef, 
                                          averageTitles$xTitle, averageTitles$yTitle, averageTitles$mainTitle,
                                          graphicalParams$avgOccupancyTheme) 
     
-    fragmentLengthTitles <- GetPlotTitles(plotsConfig$fragmentLength, sampleName)
+    #fragmentLengthTitles <- GetPlotTitles(plotsConfig$fragmentLength, sampleName)
+    fragmentLengthTitles <- plotsConfig$fragmentLength
     fragmentLength <- PlotFragmentLength(lengthHist, lMin, lMax, 
                                          fragmentLengthTitles$xTitle, fragmentLengthTitles$yTitle,
                                          graphicalParams$fragmentLengthTheme)

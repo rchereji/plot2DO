@@ -197,6 +197,11 @@ GetChromosomeLength <- function(genome) {
           chrDataToSaveFilter <- chrDataToSave
         }
       
+        annotationsFolder <- dirname(filePath)       
+        if (! file.exists(annotationsFolder)){           
+            dir.create(annotationsFolder)
+        }  
+          
         # save downloaded data
         write.table(chrDataToSaveFilter, filePath, quote = FALSE, col.names = FALSE, row.names = FALSE, sep="\t")
         # clean

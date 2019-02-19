@@ -26,7 +26,7 @@ Main <- function(command_line_args=NA)
   referenceGRanges <- Align(params$referencePointsBed, annotations, params$reference, 
                             params$beforeRef, params$afterRef, params$genome, params$align)
   
-  outputFolderPath <- CreateOutputFolders(params$referencePointsBed, params$reference, params$siteLabel)
+  outputFolderPath <- CreateOutputFolders(params$plotType, params$referencePointsBed, params$reference, params$siteLabel)
   
   CalculatePlotData(params, reads, referenceGRanges)
 

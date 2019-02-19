@@ -62,9 +62,9 @@ LoadArguments <- function(commandLineArgs = NA){
   return(opt)
 }
 
-CreateOutputFolders <- function(sites, selectedReference, siteLabel) {
+CreateOutputFolders <- function(plotType, sites, selectedReference, siteLabel) {
   # Create folder where figures are saved
-  folderPath <- GetOutputBaseFolderPath(sites, selectedReference, siteLabel)
+  folderPath <- GetOutputBaseFolderPath(plotType, sites, selectedReference, siteLabel)
   dir.create(folderPath, showWarnings = FALSE, recursive = TRUE)
   return(folderPath)
 }
@@ -72,9 +72,9 @@ CreateOutputFolders <- function(sites, selectedReference, siteLabel) {
 
 # output helper functions:
 
-GetOutputBaseFolderPath <- function(sites, selectedReference, siteLabel){
+GetOutputBaseFolderPath <- function(plotType, sites, selectedReference, siteLabel){
 
-  folderNameHead <- "2D_occupancy_"
+  folderNameHead <- paste0("2D_", tolower(plotType), "_")
   
   if (is.null(sites)) {
     folderName <- paste(folderNameHead, selectedReference, sep = "")
@@ -111,7 +111,7 @@ GetOutputMatrixFilePath <- function(plotType, sites, selectedReference, siteLabe
 GetOutputFilePathBase <- function(plotType, sites, selectedReference, siteLabel, 
                                       lMin, lMax, sampleName, extension){
   
-  folder_base_path <- GetOutputBaseFolderPath(sites, selectedReference, siteLabel)
+  folder_base_path <- GetOutputBaseFolderPath(plotType, sites, selectedReference, siteLabel)
   
   fileNameHead <- paste0(plotType, "_matrix.")
   fileNameTail <- paste0(".", lMin, "_", lMax, ".", sampleName, extension)
