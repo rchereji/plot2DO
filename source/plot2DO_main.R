@@ -31,6 +31,12 @@ Main <- function(command_line_args=NA)
   CalculatePlotData(params, reads, referenceGRanges)
 
   plot <- PlotFigure(params)
+    
+  # check whether the unwanted file exists and remove it
+  somethingToRemove <- file.exists("Rplots.pdf")
+  if(somethingToRemove) {
+      dummy <- file.remove("Rplots.pdf")  
+  }
   
 }
 

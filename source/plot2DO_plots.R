@@ -72,7 +72,7 @@ suppressPackageStartupMessages({
 #  }
 
 GetPlotsLabels <- function(sampleName, type, reference, site, align) {
-  
+
   #defaults:
   referenceLabel <- ""
   typeLabel <- ""
@@ -87,13 +87,13 @@ GetPlotsLabels <- function(sampleName, type, reference, site, align) {
     
     typeLabel <- "dyad density"
     
-  } else if(typeLabel == "fivePrime_ends") {
+  } else if(type == "FIVEPRIME_ENDS") {
     
-    typeLabel <- "5’ ends density"
+    typeLabel <- "density"
     
-  } else if(typeLabel == "threePrime_ends") {
+  } else if(type == "THREEPRIME_ENDS") {
     
-    typeLabel <- "3’ ends density"
+    typeLabel <- "density"
     
   }
   
@@ -117,7 +117,7 @@ GetPlotsLabels <- function(sampleName, type, reference, site, align) {
       alignLabel <- "center"
     }
   }
-  
+      
   if(referenceLabel != "") {
     
     heatmapXLabel <- "Fragment length (bp)"
@@ -143,7 +143,7 @@ GetPlotsLabels <- function(sampleName, type, reference, site, align) {
     averageYLabel <- paste0("Average ", typeLabel)
     
   }
-  
+      
   heatmapLabels <- list(xTitle = heatmapXLabel, yTitle = heatmapYLabel, legendTitle = heatmapLegend, mainTitle = sampleName)
   averageLabels <- list(xTitle = averageXLabel, yTitle = averageYLabel, legendTitle = "", mainTitle = "")
   fragmentLengthLabels <- list(xTitle = fragmentLengthXLabel, yTitle = fragmentLengthYLabel, legendTitle = "", mainTitle = "")
