@@ -1,18 +1,10 @@
 #!/usr/bin/env Rscript
 
-# v1.0.1 - add Arabidopsis thaliana (TAIR10)
-#        - change option --organism to --genome
-# v1.0.2 - add S. pombe (EF2)
-# v1.0.3 - add chr Y and rDNA for dm6 genome
-# v1.0.4 - correct RangesList issue (see https://support.bioconductor.org/p/109079/)
-# v1.0.5 - refactor
-
-# load app config values:
-
 suppressPackageStartupMessages({
   library(yaml)
 })
 
+# Load default paths from config.yaml
 config <- yaml.load_file("config/config.yaml")
 
 sourceBasePath <- config$application$paths$source
@@ -22,7 +14,6 @@ if(is.null(sourceBasePath)) {
 
 readsBasePath <- config$application$paths$reads
 if(is.null(readsBasePath)) {
-  #readsBasePath <- file.path(getwd(), "data")
   readsBasePath <- getwd()
 }
 
@@ -33,7 +24,6 @@ if(is.null(testOutputBasePath)) {
 
 annotationsBasePath <- config$application$paths$annotations
 if(is.null(annotationsBasePath)) {
-  # annotationsBasePath <- file.path(getwd(), "Annotations")
   annotationsBasePath <- getwd()
 }
 
