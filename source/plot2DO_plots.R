@@ -412,7 +412,6 @@ GetGraphicalParams <- function(simplifyPlot, squeezePlot) {
                                              axis.title.y.left = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)))
   }  
 
-
      
   result = list(layout = layout, 
                 gridWidths = gridWidths, gridHeights = gridHeights, 

@@ -22,8 +22,7 @@ Main <- function(command_line_args=NA)
   
   reads <- CleanReads(rawReads, annotations$chrLen, params$lMin, params$lMax)
 
-  # alignment:
-  referenceGRanges <- Align(params$referencePointsBed, annotations, params$reference, 
+  referenceGRanges <- ConstructReferenceGRanges(params$referencePointsBed, annotations, params$reference, 
                             params$beforeRef, params$afterRef, params$genome, params$align)
   
   outputFolderPath <- CreateOutputFolders(params$plotType, params$referencePointsBed, params$reference, params$siteLabel)

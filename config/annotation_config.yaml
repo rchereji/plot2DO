@@ -106,7 +106,6 @@ annotations:
         - 4
         - X
         - Y
-        - rDNA
       path: Annotations/dm6_chromInfo.txt  
     mart:
       host: may2017.archive.ensembl.org
@@ -247,7 +246,7 @@ annotations:
         - chrY      
       path: Annotations/mm10_chromInfo.txt  
     mart:
-      # host: 
+      host: oct2014.archive.ensembl.org
       biomart: ENSEMBL_MART_ENSEMBL
       dataset: mmusculus_gene_ensembl
       attributes:

@@ -30,11 +30,11 @@ LoadReads <- function(inputFilename, genome, annotations){
            inputFilePath <- file.path(readsBasePath, inputFilename)
            bam <- scanBam(inputFilePath, param=param)
            aln <- bam[[1]]
+           
            # Keep only the proper reads, with the length > 0
            posStrandReads <- aln$isize > 0
            reads <- BuildReadsGRanges(aln, posStrandReads, genome, annotations)
            rm(bam)
-           # save(reads, file=paste("reads.", lMin, "_", lMax, ".", sample.name, ".RData", sep=""))
          },
          {
            print_help(opt_parser)
@@ -53,49 +53,33 @@ BuildReadsGRanges <- function(aln, posStrandReads, genome, annotations) {
                    ranges = IRanges(start = aln$pos[posStrandReads], 
                                     width = aln$isize[posStrandReads]))
   
-  genomeSeqInfo <-  Seqinfo(seqnames = names(annotations$chrLen),
-                            seqlengths = as.numeric(annotations$chrLen),
-                            isCircular = rep(NA, length(annotations$chrLen)),
-                            genome = rep(genome, length(annotations$chrLen)))
+  genomeSeqInfo <- Seqinfo(seqnames = names(annotations$chrLen),
+                           seqlengths = as.numeric(annotations$chrLen),
+                           isCircular = rep(NA, length(annotations$chrLen)),
+                           genome = rep(genome, length(annotations$chrLen)))
   
   good.seq.levels <- intersect(seqlevels(reads), seqlevels(genomeSeqInfo))
-  #sort good.seq.levels??
 
   result <- keepSeqlevels(reads, good.seq.levels, pruning.mode="coarse")
-  # seqlevels(result) should be sort as seqlevels(genomeSeqInfo) 
   seqlevels(result) <- good.seq.levels
   seqlevels(genomeSeqInfo) <- good.seq.levels
-  seqinfo(result) <- genomeSeqInfo  
+  seqinfo(result) <- genomeSeqInfo  # This will make the coverages to extend to the chromosome edges, even if we don't have reads covering the whole chromosome
   
   return(result)
   
 }
 
-# reads <- rawReads
-# chrLen <- annotations$chrLen
 CleanReads <- function(reads, chrLen, lMin, lMax){
 
-  # Remove problematic regions (e.g. repeated rDNA in the case of yeast)
-
-  # Discard the reads from the yeast mitochondrial DNA
-  reads <- reads[seqnames(reads) != 'chrM']
-  
-  ##################
-  # Size selection #
-  ##################
+  # Size selection; keep reads with the length between lMin and lMax
   readLength <- width(reads)
-  # Eliminate the reads that are shorter than lMin or longer than lMax
   goodReadsInd <- ((readLength >= lMin) & (readLength <= lMax))
   goodReadsLen <- reads[goodReadsInd]
-  
-  # NEW:
-  # We can inspect the raw coverage for each chromosome and mark the regions where 
-  # the coverage is higher than say 10 times the chromosome average. 
-  # Then either remove the reads from these regions or we could remove the promoter windows that overlap with these "bad regions".
   
   # Compute the raw coverage of these reads
   rawOcc <- coverage(goodReadsLen)
 
+  # Discard regions where the raw coverage is very high -- sequencing artifacts
   # Compute the threshold occupancy for each chromosome
   thresholdFactor <- 10
   chrLabel <- seqlevels(rawOcc)
@@ -126,24 +110,27 @@ CleanReads <- function(reads, chrLen, lMin, lMax){
 
   badRegionsDF <- lapply(badRegions, function(gr) as.data.frame(gr))
   badRegionsDFAll <- do.call(rbind, badRegionsDF)
-  if(ncol(badRegionsDFAll) > 0 & nrow(badRegionsDFAll) > 0) {
+  if (ncol(badRegionsDFAll) > 0 & nrow(badRegionsDFAll) > 0) {
     badRegionsAll <- makeGRangesFromDataFrame(badRegionsDFAll)
     badReadIndex <- overlapsAny(goodReadsLen, badRegionsAll, ignore.strand=TRUE)
   }  else {
-    # all good regions
+    # all chr are good; no regions with very high coverage
     badReadIndex <- rep(FALSE, length(goodReadsLen))
   }
 
   goodReadsLenCov <- goodReadsLen[!badReadIndex]
   
-  # Make sure that each chromosome has at least a read on it (add an extra read of 1bp at the end of each chromosome)
-  noChr <- length(chrLen)
-  extraReads <- GRanges(seqnames = names(chrLen),
-                        ranges = IRanges(start = chrLen, width = 1),
-                        strand = rep("+", noChr),
-                        seqlengths = chrLen)
-  
-  reads <- c(extraReads, goodReadsLenCov)
+  ##
+  ## This part is not necessary anymore since seqinfo(reads) is correct
+  ##
+  # # Make sure that each chromosome has at least a read on it (add an extra read of 1bp at the end of each chromosome)
+  # noChr <- length(chrLen)
+  # extraReads <- GRanges(seqnames = names(chrLen),
+  #                       ranges = IRanges(start = chrLen, width = 1),
+  #                       strand = rep("+", noChr),
+  #                       seqlengths = chrLen)
+  # 
+  # reads <- c(extraReads, goodReadsLenCov)
   
   return(reads)
 }
@@ -176,7 +163,7 @@ GetChromosomeLength <- function(genome) {
     filePath <- file.path(annotationsBasePath, configFilePath)
     if(! file.exists(filePath)) {
       if(is.null(url)) {
-        #error: no hay datos de chr 
+        # error: no url from where to download chrom.sizes
       } else {
         fileExtension <- file_ext(url)
         destFileName <- paste0("tmp.", fileExtension)
@@ -191,8 +178,8 @@ GetChromosomeLength <- function(genome) {
         
         #filter by chr list:
         chrDataToSave <- chrData[order(chrData$V1), c(1:2)]
-        if(nrow(chrFilter) > 0 & ncol(chrFilter) > 0) {
-          chrDataToSaveFilter <- merge(chrDataToSave, chrFilter, by=c(1))   
+        if (nrow(chrFilter) > 0 & ncol(chrFilter) > 0) {
+          chrDataToSaveFilter <- merge(chrDataToSave, chrFilter, by=c(1))
         } else {
           chrDataToSaveFilter <- chrDataToSave
         }
@@ -210,14 +197,13 @@ GetChromosomeLength <- function(genome) {
     }
     result <- read.table(filePath, stringsAsFactors = FALSE, sep="\t")
   } else {
-    #error debe haber un repo local para chr length
+    # error: genomeConfig$chromosome_size$path is empty
   }  
   return(result)
 }
 
 GetAnnotations <- function(genome) {
   
-  # set configFilePath eq your yaml file path:
   configFilePath <- file.path(configBasePath, "annotation_config.yaml")
   config <- yaml.load_file(configFilePath)
   
@@ -239,14 +225,13 @@ GetAnnotations <- function(genome) {
     # exclude annotations with attr_id == ''
     annot <- annot[annot[mart$attributeId] != '', ]
     
-    strand <- annot[[ mart$vars$strand]]
+    strand <- annot[[mart$vars$strand]]
     txStart <- annot[[mart$vars$txStart]]
     txEnd <- annot[[mart$vars$txEnd]]
     chrName <- annot[[mart$vars$chrName]]
     
     # check if name begins with "chr", fix it if not:
     someChrName <- tolower(chrName[1])
-    # print(someChrName)
     if(substr(someChrName, 1, 3) != "chr"){
       chrName <- paste0("chr", chrName)
     } 
@@ -263,7 +248,7 @@ GetAnnotations <- function(genome) {
                               TTS = TTS,
                               stringsAsFactors = FALSE) 
     
-  } else if(! is.null(file)) {
+  } else if (! is.null(file)) {
     
     annotationsFilePath <- file.path(annotationsBasePath, file$path)
     annotations <- read.csv(annotationsFilePath, header=TRUE, stringsAsFactors=FALSE)
