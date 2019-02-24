@@ -18,23 +18,24 @@ GetPlotsLabels <- function(sampleName, type, reference, site, align) {
                       "")
   
   referenceLabel <- switch(reference, 
-                           "TSS"  = "TSS", 
-                           "TTS"  = "TTS", 
-                           "Plus1"= "+1 nuc.", 
-                           "")
+      "TSS"  = "TSS", 
+      "TTS"  = "TTS", 
+      "Plus1"= "+1 nuc.", 
+      "")
+
   
   if (site != "" & align != "") {
     siteLabel <- site
     alignLabel <- switch(align, 
-                             "fivePrime"  = "5'", 
-                             "threePrime" = "3'", 
-                             "center"= "center", 
-                             "")
-  } else {
-    siteLabel <- ""
-    alignLabel <- ""
+                    "fivePrime"  = "5'", 
+                    "threePrime" = "3'", 
+                    "center"= "center", 
+                    "")
+  } else {      
+      alignLabel <- ""
+      siteLabel <- ""
   }
-   
+
   # Construct axes labels
   heatmapYLabel <- "Fragment length (bp)"
   heatmapLegend <- "Relative coverage (%)"

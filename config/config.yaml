@@ -4,4 +4,4 @@ application:
     # config:
     reads:
     annotations:
-    outTests:
+    output:

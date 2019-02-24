@@ -20,12 +20,12 @@ annotations:
         - chrXIV
         - chrXV
         - chrXVI
-      path: Annotations/sacCer3_chromInfo.txt  
+      path: annotations/sacCer3_chromInfo.txt  
     file:
-      path: Annotations/sacCer3_annotations.csv
+      path: annotations/sacCer3_annotations.csv
   EF2:
     chromosome_size: 
-      path: Annotations/EF2_chromInfo.txt  
+      path: annotations/EF2_chromInfo.txt  
     mart:
       host: fungi.ensembl.org
       biomart: fungi_mart
@@ -51,7 +51,7 @@ annotations:
         - 3
         - 4
         - 5
-      path: Annotations/tair10_chromInfo.txt  
+      path: annotations/tair10_chromInfo.txt  
     mart:
       host: plants.ensembl.org
       biomart: plants_mart
@@ -78,7 +78,7 @@ annotations:
         - chr3R
         - chr4
         - chrX
-      path: Annotations/dm3_chromInfo.txt  
+      path: annotations/dm3_chromInfo.txt  
     mart:
       host: dec2014.archive.ensembl.org
       biomart: ENSEMBL_MART_ENSEMBL
@@ -106,7 +106,7 @@ annotations:
         - 4
         - X
         - Y
-      path: Annotations/dm6_chromInfo.txt  
+      path: annotations/dm6_chromInfo.txt  
     mart:
       host: may2017.archive.ensembl.org
       biomart: ENSEMBL_MART_ENSEMBL
@@ -133,7 +133,7 @@ annotations:
         - chrIV
         - chrV
         - chrX
-      path: Annotations/ce10_chromInfo.txt  
+      path: annotations/ce10_chromInfo.txt  
     mart:
       host: may2012.archive.ensembl.org
       biomart: ENSEMBL_MART_ENSEMBL
@@ -160,7 +160,7 @@ annotations:
         - chrIV
         - chrV
         - chrX
-      path: Annotations/ce11_chromInfo.txt  
+      path: annotations/ce11_chromInfo.txt  
     mart:
       host: may2017.archive.ensembl.org
       biomart: ENSEMBL_MART_ENSEMBL
@@ -202,7 +202,7 @@ annotations:
         - chr19
         - chrX
         - chrY
-      path: Annotations/mm9_chromInfo.txt  
+      path: annotations/mm9_chromInfo.txt  
     mart:
       host: may2012.archive.ensembl.org
       biomart: ENSEMBL_MART_ENSEMBL
@@ -244,7 +244,7 @@ annotations:
         - chr19
         - chrX
         - chrY      
-      path: Annotations/mm10_chromInfo.txt  
+      path: annotations/mm10_chromInfo.txt  
     mart:
       host: oct2014.archive.ensembl.org
       biomart: ENSEMBL_MART_ENSEMBL
@@ -289,7 +289,7 @@ annotations:
         - chr22
         - chrX
         - chrY
-      path: Annotations/hg18_chromInfo.txt  
+      path: annotations/hg18_chromInfo.txt  
     mart:
       host: may2009.archive.ensembl.org
       biomart: ENSEMBL_MART_ENSEMBL
@@ -334,7 +334,7 @@ annotations:
         - chr22
         - chrX
         - chrY      
-      path: Annotations/hg19_chromInfo.txt  
+      path: annotations/hg19_chromInfo.txt  
     mart:
       host: feb2014.archive.ensembl.org
       biomart: ENSEMBL_MART_ENSEMBL
@@ -379,7 +379,7 @@ annotations:
         - chr22
         - chrX
         - chrY      
-      path: Annotations/hg38_chromInfo.txt  
+      path: annotations/hg38_chromInfo.txt  
     mart:
       host: oct2018.archive.ensembl.org
       biomart: ENSEMBL_MART_ENSEMBL
