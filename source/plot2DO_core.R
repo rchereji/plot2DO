@@ -2,6 +2,7 @@ suppressPackageStartupMessages({
   library(GenomicRanges)
   library(IRanges)
   library(rtracklayer)
+  library(pracma)
 })
 
 # NUM_CORES <- detectCores(all.tests = FALSE, logical = TRUE) - 1
@@ -51,8 +52,13 @@ ComputeCoverageMatrix <- function(lMin, lMax, beforeRef, afterRef, reads,
     
     # Compute average occupancy
     occ <- coverage(goodReads, weight=coverageWeight)
-    alignedRegions <- AlignRegions(occ, referenceGRanges)
-    occMatrix[l-lMin+1,] <- colMeans(alignedRegions)
+    
+    # alignedRegions <- AlignRegions(occ, referenceGRanges)
+    # occMatrix[l-lMin+1,] <- colMeans(alignedRegions)
+    
+    # Faster alternative
+    alignedRegionsTranspose <- AlignRegionsTranspose(occ, referenceGRanges)
+    occMatrix[l-lMin+1,] <- t(rowMeans(alignedRegionsTranspose))
   }
   
   return(occMatrix)
@@ -60,46 +66,63 @@ ComputeCoverageMatrix <- function(lMin, lMax, beforeRef, afterRef, reads,
 
 
 # profile <- occ
-
-# Something is fucked up in this function! I will replace it with the old version
-
-# AlignRegions = function(profile, referenceGRanges)
-# {
-#   # Obtain Views for all GRanges that we wish to align
-#   myViews = Views(profile, referenceGRanges)
-#   
-#   # Convert the RleViewsList (myViews) into a matrix
-#   alignedProfilesList = lapply(myViews, function(gr) t(viewApply(gr, as.vector)))
-#   alignedProfiles = do.call("rbind", alignedProfilesList)
-#   
-#   ## Flip the rows corresponding to GRanges from the Crick strand
-#   CrickInd = which(as.character(strand(referenceGRanges)) == "-")
-#   alignedProfiles[CrickInd, ] = alignedProfiles[CrickInd, ncol(alignedProfiles):1]
-#   
-#   return(alignedProfiles)
-# }
-
+# This function is slow. Use instead the function AlignRegionsTranspose! (a bit faster)
 AlignRegions = function(profile, referenceGRanges)
 {
   # Create Views with all the referenceGRanges
   chrName = unique(as.character(seqnames(referenceGRanges)))
   myViews = Views(profile[chrName], as(referenceGRanges, "IntegerRangesList")[chrName])
-  alignedProfilesList = lapply(myViews, function(gr) t(viewApply(gr, as.vector)))
-  alignedProfiles = do.call("rbind", alignedProfilesList)
+  
+  # myViews2 = Views(profile, referenceGRanges) # identical to myViews
+  
+  alignedProfilesList = lapply(myViews, function(gr) t(viewApply(gr, as.vector)))  # SLOW step
+  alignedProfiles = do.call("rbind", alignedProfilesList)                          # SLOW step
   
   ## Get the index of referenceGRanges, which were reorganized by as(referenceGRanges, "IntegerRangesList")
   listInd = split(1:length(referenceGRanges), as.factor(seqnames(referenceGRanges)))
   idx = do.call("c", listInd)
   
-  rownames(alignedProfiles) = idx
+  # rownames(alignedProfiles) = idx
   alignedProfiles = alignedProfiles[order(idx),]
   
   ## Flip regions from the Crick strand
-  CrickInd = which(as.character(strand(referenceGRanges)) == "-")
-  alignedProfiles[CrickInd,] = alignedProfiles[CrickInd, ncol(alignedProfiles):1]
+  CrickInd = which(strand(referenceGRanges) == "-")
+  alignedProfiles[CrickInd,] = fliplr(alignedProfiles[CrickInd,])
+  
   return(alignedProfiles)
 }
 
+# Faster alternative:
+# Because t(ranspose) operation is slow, eliminate this step and keep all GRanges along the columns of alignedProfiles
+library(parallel)
+noCores <- switch(Sys.info()[['sysname']],
+                  Windows = 1, # the Windows version of mclapply is implemented as a serial function...
+                  Linux   = detectCores(logical = TRUE),
+                  Darwin  = detectCores(logical = TRUE)) # Mac
+AlignRegionsTranspose = function(profile, referenceGRanges)
+{
+  # Create Views with all the referenceGRanges
+  chrName = unique(as.character(seqnames(referenceGRanges)))
+  myViews = Views(profile[chrName], as(referenceGRanges, "IntegerRangesList")[chrName])
+  
+  # myViews2 = Views(profile, referenceGRanges) # identical to myViews
+  
+  alignedProfilesList = mclapply(myViews, function(gr) viewApply(gr, as.vector), mc.cores = noCores)
+  alignedProfiles = do.call("cbind", alignedProfilesList)
+  
+  ## Get the index of referenceGRanges, which were reorganized by as(referenceGRanges, "IntegerRangesList")
+  listInd = split(1:length(referenceGRanges), as.factor(seqnames(referenceGRanges)))
+  idx = do.call("c", listInd)
+  
+  # rownames(alignedProfiles) = idx
+  alignedProfiles = alignedProfiles[, order(idx)]
+  
+  ## Flip regions from the Crick strand
+  CrickInd = which(strand(referenceGRanges) == "-")
+  alignedProfiles[ , CrickInd] = flipud(alignedProfiles[ , CrickInd])
+  
+  return(alignedProfiles)
+}
 
 # optSites <- opt$sites
 # annotat <- annotations

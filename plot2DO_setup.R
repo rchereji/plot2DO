@@ -8,7 +8,7 @@
 bioconductorLibraries <- c("GenomicRanges", "IRanges", "rtracklayer", "AnnotationHub",
                           "biomaRt", "Rsamtools")
 
-cranLibraries <- c("yaml", "optparse", "ggplot2", "reshape2", "colorRamps", "gridExtra")
+cranLibraries <- c("yaml", "optparse", "ggplot2", "reshape2", "colorRamps", "gridExtra", "pracma")
 
 # Install Bioconductor packages
 if (!requireNamespace("BiocManager", quietly = TRUE)){
