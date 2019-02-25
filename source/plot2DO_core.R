@@ -3,6 +3,8 @@ suppressPackageStartupMessages({
   library(IRanges)
   library(rtracklayer)
   library(pracma)
+  library(doParallel)
+  library(foreach)
 })
 
 
@@ -24,8 +26,15 @@ ComputeNormalizationFactors <- function(reads)  {
 # afterRef <- params$afterRef
 # coverageWeight <- ComputeNormalizationFactors(reads)
 # readLength <- width(reads) 
+
+noCores <- switch(Sys.info()[['sysname']],
+                  Windows = 1, # the parallel functions do not work in Windows...
+                  Linux   = detectCores(logical = FALSE),
+                  Darwin  = detectCores(logical = FALSE)) # Mac
+
+# Parallelized version, much faster (~100x faster on my macbook pro)
 ComputeCoverageMatrix <- function(lMin, lMax, beforeRef, afterRef, reads, 
-                      coverageWeight, referenceGRanges, readLength)
+                                  coverageWeight, referenceGRanges, readLength)
 {
   #resized reads to fix mm9 and hg19:
   # TODO: ver con Razvan si este filtro esta bien para resolver el problema de los levels
@@ -37,65 +46,29 @@ ComputeCoverageMatrix <- function(lMin, lMax, beforeRef, afterRef, reads,
   chrLabel <- seqlevels(occ)
   noChr <- length(chrLabel)
   
-  rowCount <- lMax - lMin + 1
-  colCount <- 1 + beforeRef + afterRef
-  occMatrix <- matrix(data = 0, nrow = rowCount, ncol = colCount)
+  registerDoParallel(cores=noCores)
   
   # For each fragment size, compute the corresponding coverage/occupancy
-  for(l in lMin:lMax) {
+  occMatrixTranspose <- foreach(l=lMin:lMax, .combine='cbind') %dopar% {
     # Keep only the reads with the specific length l
     goodReadsInd <- (readLength == l)
     goodReads <- reads[goodReadsInd]
     
     # Compute average occupancy
     occ <- coverage(goodReads, weight=coverageWeight)
-    
-    # alignedRegions <- AlignRegions(occ, referenceGRanges)
-    # occMatrix[l-lMin+1,] <- colMeans(alignedRegions)
-    
-    # Faster alternative
     alignedRegionsTranspose <- AlignRegionsTranspose(occ, referenceGRanges)
-    occMatrix[l-lMin+1,] <- t(rowMeans(alignedRegionsTranspose))
+    rowMeans(alignedRegionsTranspose)
   }
+  occMatrix = t(occMatrixTranspose)
+  rownames(occMatrix) <- c()
+  
+  stopImplicitCluster()
+  #registerDoSEQ()
   
   return(occMatrix)
 }
 
-
 # profile <- occ
-# This function is slow. Use instead the function AlignRegionsTranspose! (a bit faster)
-AlignRegions = function(profile, referenceGRanges)
-{
-  # Create Views with all the referenceGRanges
-  chrName = unique(as.character(seqnames(referenceGRanges)))
-  myViews = Views(profile[chrName], as(referenceGRanges, "IntegerRangesList")[chrName])
-  
-  # myViews2 = Views(profile, referenceGRanges) # identical to myViews
-  
-  alignedProfilesList = lapply(myViews, function(gr) t(viewApply(gr, as.vector)))  # SLOW step
-  alignedProfiles = do.call("rbind", alignedProfilesList)                          # SLOW step
-  
-  ## Get the index of referenceGRanges, which were reorganized by as(referenceGRanges, "IntegerRangesList")
-  listInd = split(1:length(referenceGRanges), as.factor(seqnames(referenceGRanges)))
-  idx = do.call("c", listInd)
-  
-  # rownames(alignedProfiles) = idx
-  alignedProfiles = alignedProfiles[order(idx),]
-  
-  ## Flip regions from the Crick strand
-  CrickInd = which(strand(referenceGRanges) == "-")
-  alignedProfiles[CrickInd,] = fliplr(alignedProfiles[CrickInd,])
-  
-  return(alignedProfiles)
-}
-
-# Faster alternative:
-# Because t(ranspose) operation is slow, eliminate this step and keep all GRanges along the columns of alignedProfiles
-library(parallel)
-noCores <- switch(Sys.info()[['sysname']],
-                  Windows = 1, # the Windows version of mclapply is implemented as a serial function...
-                  Linux   = detectCores(logical = TRUE),
-                  Darwin  = detectCores(logical = TRUE)) # Mac
 AlignRegionsTranspose = function(profile, referenceGRanges)
 {
   # Create Views with all the referenceGRanges
@@ -104,7 +77,7 @@ AlignRegionsTranspose = function(profile, referenceGRanges)
   
   # myViews2 = Views(profile, referenceGRanges) # identical to myViews
   
-  alignedProfilesList = mclapply(myViews, function(gr) viewApply(gr, as.vector), mc.cores = noCores)
+  alignedProfilesList = lapply(myViews, function(gr) viewApply(gr, as.vector))
   alignedProfiles = do.call("cbind", alignedProfilesList)
   
   ## Get the index of referenceGRanges, which were reorganized by as(referenceGRanges, "IntegerRangesList")

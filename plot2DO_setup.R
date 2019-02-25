@@ -1,6 +1,6 @@
 # Libraries that are required:
 # CRAN: 
-#   c("colorRamps", "ggplot2", "gridExtra", "optparse", "pracma", "reshape2", "yaml")
+#   c("colorRamps", "doParallel", "foreach", "ggplot2", "gridExtra", "optparse", "pracma", "reshape2", "yaml")
 # Bioconductor: 
 #   c("AnnotationHub", "biomaRt", "GenomicRanges", "IRanges", "Rsamtools", "rtracklayer")
 # R core libraries (do not need installation): 
@@ -11,8 +11,8 @@ noError = TRUE
 
 # Install CRAN packages
 cat("Checking and installing missing CRAN packages:\n")
-cranLibraries <- c("colorRamps", "ggplot2", "gridExtra", "optparse", "pracma", "reshape2", "yaml")
-sapply(cranLibraries, function(x) {
+cranLibraries <- c("colorRamps", "doParallel", "foreach", "ggplot2", "gridExtra", "optparse", "pracma", "reshape2", "yaml")
+foo <- sapply(cranLibraries, function(x) {
   if (requireNamespace(x, quietly = TRUE)){
     result <- "was already available."
   } else {
@@ -38,7 +38,7 @@ bioconductorLibraries <- c("AnnotationHub", "biomaRt", "GenomicRanges", "IRanges
 if (!requireNamespace("BiocManager", quietly = TRUE)){
   install.packages("BiocManager")
 }
-sapply(bioconductorLibraries, function(x) {
+foo <- sapply(bioconductorLibraries, function(x) {
   if (requireNamespace(x, quietly = TRUE)){
     result <- "was already available."
   } else {
@@ -57,7 +57,7 @@ sapply(bioconductorLibraries, function(x) {
 
 cat("\nDone!")
 if (noError) {
-  cat(" All the required packages are available now.")
+  cat(" All the required packages are available now.\n")
 } else {
-  cat(" Error(s) found! See above.")
+  cat(" Error(s) found! See above.\n")
 }
