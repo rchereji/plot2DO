@@ -181,9 +181,13 @@ PlotAverageOccupancy <- function(occMatrix, beforeRef, afterRef, xTitle, yTitle,
   avgOcc.df <- as.data.frame(avgOcc)
   avgOcc.df$x <- seq(-beforeRef, afterRef, 1)
   
-  deltaYBreaks = round(1.1*max(avgOcc)/10, digits = 1)
+  deltaYBreaks = max(0.1, round(1.1*max(avgOcc)/10, digits = 1))
   yBreaks <- seq(0, 1.1*max(avgOcc), deltaYBreaks)
-  yLabels <- FixTickLabels(as.character(yBreaks), 1, " ")  # yBreaks
+  if (length(yBreaks) >= 8){
+    yLabels <- FixTickLabels(as.character(yBreaks), 1, " ")  # yBreaks
+  } else {
+    yLabels <- FixTickLabels(as.character(yBreaks), 0, " ")  # yBreaks
+  }
   yLimits <- c(0, 1.1*max(avgOcc))
   xBreaks <- seq(-beforeRef, afterRef, 100)
   xLabels <- FixTickLabels(as.character(xBreaks), 4, "") # xBreaks

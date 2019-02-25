@@ -5,8 +5,6 @@ suppressPackageStartupMessages({
   library(pracma)
 })
 
-# NUM_CORES <- detectCores(all.tests = FALSE, logical = TRUE) - 1
-# print(NUM_CORES)
 
 ComputeNormalizationFactors <- function(reads)  {
 
@@ -14,7 +12,6 @@ ComputeNormalizationFactors <- function(reads)  {
   occ <- coverage(reads)
   chrLabel <- seqlevels(occ)
   coverageWeight <- lapply(chrLabel, function(chr) 1/mean(occ[[chr]]))
-  # coverageWeight <- mclapply(chrLabel, function(chr) 1/mean(occ[[chr]]), mc.cores = NUM_CORES)
   names(coverageWeight) <- chrLabel
   return(coverageWeight)
 }

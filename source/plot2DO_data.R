@@ -13,28 +13,10 @@ LoadReads <- function(inputFilename, genome, annotations){
   
   switch(inputType, 
          BED={
-           sample.name <- sub(".bed", "", inputFilename)
-           reads <- import.bed(inputFilename)
+           reads <- BuildReadsGRangesFromBED(inputFilename, genome, annotations)
          },
          BAM={
-           
-           sample.name <- sub(".bam", "", inputFilename)
-           
-           all_fields <- c("rname", "pos", "isize")
-           param <- ScanBamParam(what = all_fields, 
-                                flag = scanBamFlag(isPaired = TRUE, isProperPair = TRUE, 
-                                                   isUnmappedQuery = FALSE, hasUnmappedMate = FALSE, 
-                                                   isMinusStrand = FALSE, isMateMinusStrand = TRUE,
-                                                   isNotPassingQualityControls = FALSE))
-           
-           inputFilePath <- file.path(readsBasePath, inputFilename)
-           bam <- scanBam(inputFilePath, param=param)
-           aln <- bam[[1]]
-           
-           # Keep only the proper reads, with the length > 0
-           posStrandReads <- aln$isize > 0
-           reads <- BuildReadsGRanges(aln, posStrandReads, genome, annotations)
-           rm(bam)
+           reads <- BuildReadsGRangesFromBAM(inputFilename, genome, annotations)
          },
          {
            print_help(opt_parser)
@@ -46,9 +28,35 @@ LoadReads <- function(inputFilename, genome, annotations){
   
 }
 
-# check with Razvan: fix problem with dm3 test 42
-BuildReadsGRanges <- function(aln, posStrandReads, genome, annotations) {
+BuildReadsGRangesFromBED <- function(bedFilename, genome, annotations){
+  reads <- import.bed(bedFilename)
+  genomeSeqInfo <- Seqinfo(seqnames = names(annotations$chrLen),
+                           seqlengths = as.numeric(annotations$chrLen),
+                           isCircular = rep(NA, length(annotations$chrLen)),
+                           genome = rep(genome, length(annotations$chrLen)))
   
+  good.seq.levels <- intersect(seqlevels(reads), seqlevels(genomeSeqInfo))
+  
+  result <- keepSeqlevels(reads, good.seq.levels, pruning.mode="coarse")
+  seqlevels(result) <- good.seq.levels
+  seqlevels(genomeSeqInfo) <- good.seq.levels
+  seqinfo(result) <- genomeSeqInfo
+  return(result)
+}
+
+BuildReadsGRangesFromBAM <- function(bamFilename, genome, annotations){
+  all_fields <- c("rname", "pos", "isize")
+  param <- ScanBamParam(what = all_fields, 
+                        flag = scanBamFlag(isPaired = TRUE, isProperPair = TRUE, 
+                                           isUnmappedQuery = FALSE, hasUnmappedMate = FALSE, 
+                                           isMinusStrand = FALSE, isMateMinusStrand = TRUE,
+                                           isNotPassingQualityControls = FALSE))
+
+  bam <- scanBam(bamFilename, param=param)
+  aln <- bam[[1]]
+  rm(bam)
+  
+  posStrandReads <- aln$isize > 0
   reads <- GRanges(seqnames=Rle(aln$rname[posStrandReads]),
                    ranges = IRanges(start = aln$pos[posStrandReads], 
                                     width = aln$isize[posStrandReads]))
@@ -59,15 +67,14 @@ BuildReadsGRanges <- function(aln, posStrandReads, genome, annotations) {
                            genome = rep(genome, length(annotations$chrLen)))
   
   good.seq.levels <- intersect(seqlevels(reads), seqlevels(genomeSeqInfo))
-
+  
   result <- keepSeqlevels(reads, good.seq.levels, pruning.mode="coarse")
   seqlevels(result) <- good.seq.levels
   seqlevels(genomeSeqInfo) <- good.seq.levels
-  seqinfo(result) <- genomeSeqInfo  # This will make the coverages to extend to the chromosome edges, even if we don't have reads covering the whole chromosome
-  
+  seqinfo(result) <- genomeSeqInfo
   return(result)
-  
 }
+
 
 CleanReads <- function(reads, chrLen, lMin, lMax){
 
