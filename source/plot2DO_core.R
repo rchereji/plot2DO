@@ -29,8 +29,8 @@ ComputeNormalizationFactors <- function(reads)  {
 
 noCores <- switch(Sys.info()[['sysname']],
                   Windows = 1, # the parallel functions do not work in Windows...
-                  Linux   = detectCores(logical = FALSE),
-                  Darwin  = detectCores(logical = FALSE)) # Mac
+                  Linux   = detectCores(logical = FALSE) - 1,
+                  Darwin  = detectCores(logical = FALSE) - 1) # Mac
 
 # Parallelized version, much faster (~100x faster on my macbook pro)
 ComputeCoverageMatrix <- function(lMin, lMax, beforeRef, afterRef, reads, 

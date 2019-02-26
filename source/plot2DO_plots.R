@@ -127,24 +127,25 @@ PlotHeatmap <- function(occMatrix, xTitle, yTitle, mainTitle, legendTitle,
   
   breaksLabels <- GetHeatmapBreaksAndLabels(occMatrix, colorScaleMax)
     
-  result <- ggplot(occMatrixMelt, aes(Var1, Var2, fill = value)) + 
+  result <- ggplot(occMatrixMelt, aes(x = Var1, y = Var2, fill = value)) + 
     geom_raster(aes(fill = value), interpolate = TRUE) + 
     scale_color_gradientn(colors = matlab.like(100), aesthetics = "fill", 
                           breaks = breaksLabels$breaks, 
                           labels = breaksLabels$labels,
                           limits = breaksLabels$limits)
   
-  xbreaks.num <- 20
-  step <- (afterRef + beforeRef) / xbreaks.num
-  xBreaks <- seq(-beforeRef, afterRef, by=step) 
-  matrixIndexes <- xBreaks + rep(beforeRef, length(xBreaks))
-  xLabels <- FixTickLabels(as.character(xBreaks), 4, "")  # skip 4 labels
-  xBreaks <- matrixIndexes
-  xLimits <- c(min(xBreaks), max(xBreaks))
+  xBreaks <- seq(-beforeRef, afterRef, by=100) + beforeRef + 1
+  if (length(xBreaks) >= 5){
+    xLabels <- FixTickLabels(as.character(seq(-beforeRef, afterRef, by=100)), 4, "")  # skip 4 labels
+  } else {
+    xBreaks <- seq(-beforeRef, afterRef, by=10) + beforeRef + 1
+    xLabels <- FixTickLabels(as.character(seq(-beforeRef, afterRef, by=10)), 4, "")  # skip 4 labels
+  }
+  xLimits <- c(1, beforeRef + afterRef + 1)
   
-  yBreaks <- min(occMatrixMelt$Var2) + seq(min(occMatrixMelt$Var2) - 1, max(occMatrixMelt$Var2) - 1, by=10)
+  yBreaks <- seq(lMin, lMax, by=10) - lMin + 1
   yLabels <- FixTickLabels(as.character(seq(lMin, lMax, by=10)), 4, "")  # skip 4 labels
-  yLimits <- c(min(yBreaks), max(yBreaks))
+  yLimits <- c(1, lMax - lMin + 1)
   
   guideColourbar <- guide_colourbar(title = legendTitle, reverse = FALSE, title.position = "left",
                                     frame.colour = "black", frame.linewidth = 0.5,
@@ -158,19 +159,18 @@ PlotHeatmap <- function(occMatrix, xTitle, yTitle, mainTitle, legendTitle,
   
   result <- result + labs(x = xTitle, y = yTitle, title = mainTitle)
   
-  scaleY <- scale_y_continuous(breaks = yBreaks, labels = yLabels, limits = yLimits,
-                               expand = c(0,0), position = scaleYPosition,
-                               sec.axis = dup_axis())
   scaleX <- scale_x_continuous(breaks = xBreaks, labels = xLabels, limits = xLimits,
                                expand = c(0,0), position = scaleXPosition, 
                                sec.axis = dup_axis())
+  
+  scaleY <- scale_y_continuous(breaks = yBreaks, labels = yLabels, limits = yLimits,
+                               expand = c(0,0), position = scaleYPosition,
+                               sec.axis = dup_axis())
 
   result <- result + guides(fill = guideColourbar) +
-    scaleY + scaleX + geom_vline(xintercept=beforeRef, linetype='longdash', color="white", size=0.4) +
+    scaleY + scaleX + geom_vline(xintercept=beforeRef+1, linetype='longdash', color="white", size=0.4) +
     customTheme
 
-  # result <- result + theme(plot.background = element_rect(fill = "darkblue"))
-  
   return(result)
 
 }  
@@ -189,14 +189,14 @@ PlotAverageOccupancy <- function(occMatrix, beforeRef, afterRef, xTitle, yTitle,
     yLabels <- FixTickLabels(as.character(yBreaks), 0, " ")  # yBreaks
   }
   yLimits <- c(0, 1.1*max(avgOcc))
+  
   xBreaks <- seq(-beforeRef, afterRef, 100)
   xLabels <- FixTickLabels(as.character(xBreaks), 4, "") # xBreaks
   xLimits <- c(-beforeRef, afterRef)
   
-  xlineInterceps <- c(-500, 0, 500)
+  xlineInterceps <- seq(-5000, 5000, by=500)
   
-  result <- ggplot(data=avgOcc.df) + 
-    aes(x = avgOcc.df$x, y = avgOcc.df$avgOcc) + 
+  result <- ggplot(data=avgOcc.df, aes(x = x, y = avgOcc)) + 
     geom_line(color="blue") + 
     scale_y_continuous(breaks = yBreaks, labels = yLabels, limits = yLimits, expand = c(0,0),
                        sec.axis = dup_axis()) + 
@@ -222,12 +222,10 @@ PlotFragmentLength <- function(lengthHist, lMin, lMax, xTitle, yTitle, customThe
   yLabels <- yBreaks
   yLimits <- c(min(lengthHist), 1.05 * max(lengthHist))
   
-  xlineInterceps <- c(100, 150)
+  xlineInterceps <- seq(0, 1000, by=50)
   
-  result <- ggplot(data=data) + 
-    aes(x = data$x, y = data$lengthHist) + 
+  result <- ggplot(data=data, aes(x = x, y = lengthHist)) + 
     geom_line(color="blue") + 
-    # plotTheme +
     scale_y_continuous(breaks = yBreaks, labels = yLabels, limits = yLimits, expand = c(0,0),
                        sec.axis = dup_axis()) + 
     scale_x_continuous(breaks = xBreaks, labels = xLabels, limits = xLimits, expand = c(0,0),
