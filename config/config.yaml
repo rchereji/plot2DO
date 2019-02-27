@@ -1,0 +1,7 @@
+application:
+  paths:
+    source: 
+    # config:
+    reads:
+    annotations:
+    output:

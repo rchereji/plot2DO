@@ -1,0 +1,135 @@
+plot:
+
+  OCC:  # type
+  
+    TSS: # reference
+      heatmap:
+        xLabel: Position relative to TSS (bp)
+        yLabel: Fragment length (bp)
+        legend: Relative coverage (%)
+      fragmentLength:
+        xLabel: Fragment length (bp)
+        yLabel: Percentage (%)
+      average:
+        xLabel: Position relative to TSS (bp)
+        yLabel: Average occupancy   
+
+    TTS: # reference
+      heatmap:
+        xLabel: Position relative to TTS (bp)
+        yLabel: Fragment length (bp)
+        legend: Relative coverage (%)
+      fragmentLength:
+        xLabel: Fragment length (bp)
+        yLabel: Percentage (%)
+      average:
+        xLabel: Position relative to TTS (bp)
+        yLabel: Average occupancy
+
+    Plus1: # reference
+      heatmap:
+        xLabel: Position relative to  to +1 nuc. (bp)
+        yLabel: Fragment length (bp)
+        legend: Relative coverage (%)
+      fragmentLength:
+        xLabel: Fragment length (bp)
+        yLabel: Percentage (%)
+      average:
+        xLabel: Position relative to +1 nuc. (bp)
+        yLabel: Average occupanc
+    
+    tRNA: # siteLabel
+      threePrime: #align
+        heatmap:
+          xLabel: Position relative to 3' end of tRNA (bp)
+          yLabel: Fragment length (bp)
+          legend: Relative coverage (%)
+      fivePrime: #align
+        heatmap:
+          xLabel: Position relative to 5' end of tRNA (bp) 
+          yLabel: Fragment length (bp)
+          legend: Relative coverage (%)
+      center: #align
+        heatmap:
+          xLabel: Position relative to center of tRNA (bp)
+          yLabel: Fragment length (bp)
+          legend: Relative coverage (%)
+  
+    centromere: # siteLabel
+      threePrime: #align
+        heatmap:
+          xLabel: Position relative to 3' end of centromere (bp)
+          yLabel: Fragment length (bp)
+          legend: Relative coverage (%)
+      fivePrime: #align
+        heatmap:
+          xLabel: Position relative to 5' end of centromere (bp)
+          yLabel: Fragment length (bp)
+          legend: Relative coverage (%)
+      center: #align
+        heatmap:
+          xLabel: Position relative to center of centromere (bp)
+          yLabel: Fragment length (bp)
+          legend: Relative coverage (%)
+    
+    ARS: # siteLabel
+      threePrime: #align
+        heatmap:
+          xLabel: Position relative to 3' end of ARS (bp)
+          yLabel: Fragment length (bp)
+          legend: Relative coverage (%)
+      fivePrime: #align
+        heatmap:
+          xLabel: Position relative to 5' end of ARS (bp)
+          yLabel: Fragment length (bp)
+          legend: Relative coverage (%)
+      center: #align
+        heatmap:
+          xLabel: Position relative to center of ARS (bp)
+          yLabel: Fragment length (bp)
+          legend: Relative coverage (%)
+
+    
+  DYADS:  # type
+  
+    TSS: # reference
+      heatmap:
+        xLabel: Fragment length (bp)
+        yLabel: Position relative to TSS (bp)
+        legend: Relative coverage (%)
+      fragmentLength:
+        xLabel: Fragment length (bp)
+        yLabel: Percentage (%)
+      average:
+        xLabel: Position relative to TSS (bp)
+        yLabel: Average dyad density
+    TTS: # reference
+      heatmap:
+        xLabel: Fragment length (bp)
+        yLabel: Position relative to TTS (bp)
+        legend: Relative coverage (%)
+      fragmentLength:
+        xLabel: Fragment length (bp)
+        yLabel: Percentage (%)
+      average:
+        xLabel: Position relative to TTS (bp)
+        yLabel: Average dyad density
+    Plus1: # reference
+      heatmap:
+        xLabel: Fragment length (bp)
+        yLabel: Position relative to  to +1 nuc. (bp)
+        legend: Relative coverage (%)
+      fragmentLength:
+        xLabel: Fragment length (bp)
+        yLabel: Percentage (%)
+      average:
+        xLabel: Position relative to +1 nuc. (bp)
+        yLabel: Average dyad density
+    
+  # fivePrime_ends:  # type
+    
+  # threePrime_ends:  # type
+    
+  
+  
+

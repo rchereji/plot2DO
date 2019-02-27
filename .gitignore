@@ -1,0 +1,8 @@
+sample_BAM_files
+to_be_removed
+output
+annotations/*chromInfo.txt
+.Rhistory
+.ipynb_checkpoints
+plot2DO_tests-python.ipynb
+plotting_tests.R
