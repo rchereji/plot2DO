@@ -87,8 +87,10 @@ GetHeatmapBreaksAndLabels <- function(occMatrix, colorScaleMax) {
       step <- 0.05
     } else if (maxValue > 0.05) {
       step <- 0.01
-    } else {
+    } else if (maxValue > 0.01) {
       step <- 0.005
+    } else {
+      step <- 0.002
     }
         
     breaks <- seq(0, maxValue, step)
@@ -202,6 +204,9 @@ PlotFragmentLength <- function(lengthHist, lMin, lMax, xTitle, yTitle, customThe
   xLimits <- c(lMin, lMax)
   
   yBreaks <- round(seq(min(lengthHist), 1.05 * max(lengthHist), 1), 2)
+  if (length(yBreaks) == 1){
+    yBreaks <- round(seq(min(lengthHist), 1.05 * max(lengthHist), 0.2), 2)
+  }
   yLabels <- yBreaks
   yLimits <- c(min(lengthHist), 1.05 * max(lengthHist))
   
