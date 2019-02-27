@@ -19,29 +19,20 @@ ComputeNormalizationFactors <- function(reads)  {
 }
 
 
-# debug:
-# lMin <- params$lMin
-# lMax <- params$lMax
-# beforeRef <- params$beforeRef
-# afterRef <- params$afterRef
-# coverageWeight <- ComputeNormalizationFactors(reads)
-# readLength <- width(reads) 
-
 noCores <- switch(Sys.info()[['sysname']],
                   Windows = 1, # the parallel functions do not work in Windows...
-                  Linux   = detectCores(logical = FALSE) - 1,
-                  Darwin  = detectCores(logical = FALSE) - 1) # Mac
+                  Linux   = detectCores(logical = FALSE),
+                  Darwin  = detectCores(logical = FALSE)) # Mac
+
+if(noCores > 1) {
+  noCores <- noCores - 1
+}
 
 # Parallelized version, much faster (~100x faster on my macbook pro)
 ComputeCoverageMatrix <- function(lMin, lMax, beforeRef, afterRef, reads, 
                                   coverageWeight, referenceGRanges, readLength)
 {
-  #resized reads to fix mm9 and hg19:
-  # TODO: ver con Razvan si este filtro esta bien para resolver el problema de los levels
-  # referenceGRangesChrNames <- as.character(seqnames(referenceGRanges))
-  # resizedReads <- reads[as.character(seqnames(reads)) %in% referenceGRangesChrNames]
-  # seqlevels(resizedReads) <- seqlevels(referenceGRanges)
-  
+
   occ <- coverage(reads)
   chrLabel <- seqlevels(occ)
   noChr <- length(chrLabel)
@@ -59,7 +50,7 @@ ComputeCoverageMatrix <- function(lMin, lMax, beforeRef, afterRef, reads,
     alignedRegionsTranspose <- AlignRegionsTranspose(occ, referenceGRanges)
     rowMeans(alignedRegionsTranspose)
   }
-  occMatrix = t(occMatrixTranspose)
+  occMatrix <- t(occMatrixTranspose)
   rownames(occMatrix) <- c()
   
   stopImplicitCluster()
@@ -68,43 +59,32 @@ ComputeCoverageMatrix <- function(lMin, lMax, beforeRef, afterRef, reads,
   return(occMatrix)
 }
 
-# profile <- occ
-AlignRegionsTranspose = function(profile, referenceGRanges)
+AlignRegionsTranspose <- function(profile, referenceGRanges)
 {
   # Create Views with all the referenceGRanges
-  chrName = unique(as.character(seqnames(referenceGRanges)))
-  myViews = Views(profile[chrName], as(referenceGRanges, "IntegerRangesList")[chrName])
+  chrName <- unique(as.character(seqnames(referenceGRanges)))
+  myViews <- Views(profile[chrName], as(referenceGRanges, "IntegerRangesList")[chrName])
   
-  # myViews2 = Views(profile, referenceGRanges) # identical to myViews
-  
-  alignedProfilesList = lapply(myViews, function(gr) viewApply(gr, as.vector))
-  alignedProfiles = do.call("cbind", alignedProfilesList)
+  alignedProfilesList <- lapply(myViews, function(gr) viewApply(gr, as.vector))
+  alignedProfiles <- do.call("cbind", alignedProfilesList)
   
   ## Get the index of referenceGRanges, which were reorganized by as(referenceGRanges, "IntegerRangesList")
-  listInd = split(1:length(referenceGRanges), as.factor(seqnames(referenceGRanges)))
-  idx = do.call("c", listInd)
+  listInd <- split(1:length(referenceGRanges), as.factor(seqnames(referenceGRanges)))
+  idx <- do.call("c", listInd)
   
-  # rownames(alignedProfiles) = idx
-  alignedProfiles = alignedProfiles[, order(idx)]
+  alignedProfiles <- alignedProfiles[, order(idx)]
   
   ## Flip regions from the Crick strand
-  CrickInd = which(strand(referenceGRanges) == "-")
-  alignedProfiles[ , CrickInd] = flipud(alignedProfiles[ , CrickInd])
+  crickInd <- which(strand(referenceGRanges) == "-")
+  alignedProfiles[ , crickInd] <- flipud(alignedProfiles[ , crickInd])
   
   return(alignedProfiles)
 }
 
-# optSites <- opt$sites
-# annotat <- annotations
-# optAlign <- opt$align
 ConstructReferenceGRanges <- function(optSites, annotat, selectedReference, beforeRef, afterRef, genome, optAlign) {
   
   chrLen <- annotat$chrLen
-  # annotations.tmp <- annotat$annotations
-  # armar esto solo para los cromosomas de interes!!
-  # filter with chr names - fix levels problem:
-  # TODO paula: descomentar esto
-  # annotations <- annotations.tmp[annotations.tmp$Chr %in% names(chrLen), ]
+
   annotations <- annotat$annotations
   
   if (is.null(optSites)) {
@@ -127,9 +107,9 @@ ConstructReferenceGRanges <- function(optSites, annotat, selectedReference, befo
     
   } else {
     
-    referenceFilename = optSites
+    referenceFilename <- optSites
     referenceFilePath <- file.path(annotationsBasePath, referenceFilename)
-    sites = import.bed(referenceFilePath)
+    sites <- import.bed(referenceFilePath)
     
     switch(optAlign, 
            "center"    ={ fixAlign = "center" },

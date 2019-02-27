@@ -127,18 +127,6 @@ CleanReads <- function(reads, chrLen, lMin, lMax){
 
   goodReadsLenCov <- goodReadsLen[!badReadIndex]
   
-  ##
-  ## This part is not necessary anymore since seqinfo(reads) is correct
-  ##
-  # # Make sure that each chromosome has at least a read on it (add an extra read of 1bp at the end of each chromosome)
-  # noChr <- length(chrLen)
-  # extraReads <- GRanges(seqnames = names(chrLen),
-  #                       ranges = IRanges(start = chrLen, width = 1),
-  #                       strand = rep("+", noChr),
-  #                       seqlengths = chrLen)
-  # 
-  # reads <- c(extraReads, goodReadsLenCov)
-  
   return(reads)
 }
 

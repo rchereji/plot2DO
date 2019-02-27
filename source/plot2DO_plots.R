@@ -100,30 +100,13 @@ GetHeatmapBreaksAndLabels <- function(occMatrix, colorScaleMax) {
     return(result)
 }
 
-# debug:
-# xTitle <- heatmapTitles$xTitle
-# yTitle <- heatmapTitles$yTitle
-# mainTitle <- heatmapTitles$mainTitle
-# legendTitle <- heatmapTitles$legendTitle 
-# customTheme <- graphicalParams$heatmapTheme
-# legendTitleTheme <- graphicalParams$legendTitleTheme
-# legendLabelTheme <- graphicalParams$legendLabelTheme
-# scaleXPosition <- graphicalParams$scaleXPosition
-# scaleYPosition <- graphicalParams$scaleYPosition
 
 PlotHeatmap <- function(occMatrix, xTitle, yTitle, mainTitle, legendTitle,
                         beforeRef, afterRef, lMin, lMax, 
                         customTheme, legendTitleTheme, legendLabelTheme, 
                         scaleXPosition, scaleYPosition, colorScaleMax) {
   
-  # interpolate = TRUE suaviza los pixels
   occMatrixMelt <- melt(t(occMatrix))
-  
-  # TODO: pasar a configuracion
-  #legend.ticks.count <- 5
-  #breaks.size <- round((max(occMatrixMelt$value) - min(occMatrixMelt$value)) / legend.ticks.count, 3)
-  #breaks <- c(0:(legend.ticks.count - 1)) * breaks.size
-  #labels <- 100 * breaks # relative %
   
   breaksLabels <- GetHeatmapBreaksAndLabels(occMatrix, colorScaleMax)
     
@@ -248,10 +231,6 @@ GetHeatmapLegend <- function(myggplot){
   return(legend)
 }
 
-# TODO: consultar con razvan si leer datos guardados o pasar como params
-# PlotFigure <- function(opt, occMatrix, lMin, lMax, 
-#                        beforeRef, afterRef, sampleName,
-#                        plotType, lengthHist)
 PlotFigure <- function(params)  {
 
   suppressWarnings({
@@ -313,7 +292,7 @@ PlotFigure <- function(params)  {
                                layout_matrix = graphicalParams$layout,
                                widths = graphicalParams$gridWidths, 
                                heights = graphicalParams$gridHeights)
-    # grid.draw(result.grob)
+   # grid.draw(result.grob)
   }
 
   plotFilePath <- GetOutputPlotFilePath(params$plotType, params$referencePointsBed, 
@@ -322,7 +301,7 @@ PlotFigure <- function(params)  {
   ggsave(plotFilePath, result.grob, width = graphicalParams$plotWidth, height = graphicalParams$plotHeight, 
          units = "in", dpi = 300, scale = 1)   
   
-  })
+ })
   
   return(result.grob)
     
@@ -343,7 +322,6 @@ GetGraphicalParams <- function(simplifyPlot, squeezePlot) {
   legendTitleTheme <- element_text(size = 14, angle = 90, hjust = 0.5, vjust = 0.5, margin = margin(t = 0, r = 7, b = 0, l = 0))
   legendLabelTheme <- element_text(size = 12, angle = 0, hjust = 0.5)
   
-  # TODO: move to config ?
   if(simplifyPlot) {
     if(squeezePlot) { 
       layout <- cbind(c(1, 1, 1), c(1, 1, 1))
