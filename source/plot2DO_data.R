@@ -98,7 +98,7 @@ CleanReads <- function(reads, chrLen, lMin, lMax){
                         if(is.na(chrCoverageThreshold[[chr]])) {
                           result <- rawOcc[[chr]]
                         } else {
-                          result <- slice(rawOcc[[chr]], lower=chrCoverageThreshold[[chr]], rangesOnly=TRUE)
+                          result <- reduce(slice(rawOcc[[chr]], lower=chrCoverageThreshold[[chr]], rangesOnly=TRUE) + 500)
                         }
                         return(result)
                       })
