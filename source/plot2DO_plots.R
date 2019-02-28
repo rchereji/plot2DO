@@ -360,7 +360,7 @@ GetGraphicalParams <- function(simplifyPlot, squeezePlot) {
     layout <- cbind(c(NA, 4, 4), c(1,2,2), c(NA,3,3))  
     gridWidths <- c(0.5, 2, 1)
     gridHeights <- c(1.2, 1, 1)
-    plotWidth <- 10
+    plotWidth <- 9
     plotHeight <- 7
     
     scaleXPosition <- "top"
