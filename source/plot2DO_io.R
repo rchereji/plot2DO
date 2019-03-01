@@ -78,7 +78,7 @@ InitializeParams <- function(opt) {
   inputFilename <- basename(inputFilePath)
   
   # Reference label
-  if(opt$siteLabel == "Sites") {
+  if(is.null(opt$sites)) {
       siteLabel <- ""
   } else {
       siteLabel <- opt$siteLabel
