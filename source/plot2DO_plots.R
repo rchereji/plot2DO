@@ -336,8 +336,8 @@ GetGraphicalParams <- function(simplifyPlot, squeezePlot) {
       layout <- cbind(c(1))
       gridWidths <- c(1)
       gridHeights <- c(1)
-      plotWidth <- 7
-      plotHeight <- 6
+      plotWidth <- 5
+      plotHeight <- 4
     }
     
     scaleXPosition <- "bottom"
