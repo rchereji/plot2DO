@@ -21,11 +21,11 @@ ComputeNormalizationFactors <- function(reads)  {
 
 noCores <- switch(Sys.info()[['sysname']],
                   Windows = 1, # the parallel functions do not work in Windows...
-                  Linux   = detectCores(logical = FALSE),
+                  Linux   = floor(detectCores(logical = FALSE) / 2), # logical = FALSE does not work in linux..., so we divide by 2
                   Darwin  = detectCores(logical = FALSE)) # Mac
 
 if(noCores > 1) {
-  noCores <- noCores - 1
+  noCores <- min(noCores - 1, 8) # Do not use more than 8 cores (to prevent memory issues)
 }
 
 # Parallelized version, much faster (~100x faster on my macbook pro)
