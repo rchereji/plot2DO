@@ -30,9 +30,13 @@ if(noCores > 1) {
 
 # Parallelized version, much faster (~100x faster on my macbook pro)
 ComputeCoverageMatrix <- function(lMin, lMax, beforeRef, afterRef, reads, 
-                                  coverageWeight, referenceGRanges, readLength)
+                                  coverageWeight, referenceGRanges, readLength, referenceGenome)
 {
-
+  # For human and mouse data, limit the number of cores to 2 (increase this # according to the available memory that is available on your system)
+  if (referenceGenome %in% c('mm9', 'mm10', 'hg18', 'hg19', 'hg38')){
+    noCores = min(c(2, noCores)) 
+  }
+  
   occ <- coverage(reads)
   chrLabel <- seqlevels(occ)
   noChr <- length(chrLabel)
@@ -162,7 +166,7 @@ CalculatePlotData <- function(params, reads, referenceGRanges) {
   coverageWeight <- ComputeNormalizationFactors(resized_reads)
   
   occMatrix <- ComputeCoverageMatrix(params$lMin, params$lMax, params$beforeRef, params$afterRef, 
-                         resized_reads, coverageWeight, referenceGRanges, readLength)
+                         resized_reads, coverageWeight, referenceGRanges, readLength, params$genome)
   
   outputFilePath <- GetOutputMatrixFilePath(params$plotType, params$referencePointsBed, 
                                             params$reference, params$siteLabel, 
