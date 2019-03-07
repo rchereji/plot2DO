@@ -117,7 +117,7 @@ annotations:
         - strand
         - transcript_start
         - transcript_end
-      attibuteId: refseq_mrna
+      attributeId: refseq_mrna
       vars: # required. format: "variable name: mart attibute name"
         strand: strand
         txStart: transcript_start

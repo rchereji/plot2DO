@@ -5,6 +5,7 @@ suppressPackageStartupMessages({
   library(biomaRt)
   library(Rsamtools)
   library(rtracklayer)
+  library(GenomeInfoDb)
 })
 
 LoadReads <- function(inputFilename, genome, annotations){
@@ -24,16 +25,16 @@ LoadReads <- function(inputFilename, genome, annotations){
          }
   )
   
-  # Make sure the chromosome names are following the 'UCSC' convention
-  require(GenomeInfoDb)
-  seqlevelsStyle(reads) <- 'UCSC'
-  
   return(reads)
   
 }
 
 BuildReadsGRangesFromBED <- function(bedFilename, genome, annotations){
   reads <- import.bed(bedFilename)
+  
+  # Make sure the chromosome names are following the 'UCSC' convention
+  seqlevelsStyle(reads) <- 'UCSC'
+  
   genomeSeqInfo <- Seqinfo(seqnames = names(annotations$chrLen),
                            seqlengths = as.numeric(annotations$chrLen),
                            isCircular = rep(NA, length(annotations$chrLen)),
@@ -64,6 +65,9 @@ BuildReadsGRangesFromBAM <- function(bamFilename, genome, annotations){
   reads <- GRanges(seqnames=Rle(aln$rname[posStrandReads]),
                    ranges = IRanges(start = aln$pos[posStrandReads], 
                                     width = aln$isize[posStrandReads]))
+  
+  # Make sure the chromosome names are following the 'UCSC' convention
+  seqlevelsStyle(reads) <- 'UCSC'
   
   genomeSeqInfo <- Seqinfo(seqnames = names(annotations$chrLen),
                            seqlengths = as.numeric(annotations$chrLen),
@@ -213,7 +217,7 @@ GetAnnotations <- function(genome) {
   
   if (! is.null(mart)) {
     
-    if(is.null(mart$host))  {
+    if (is.null(mart$host)) {
       ensembl <- useMart(biomart = mart$biomart, dataset = mart$dataset)  
     } else {
       ensembl <- useMart(host = mart$host,biomart = mart$biomart, dataset = mart$dataset)
@@ -230,10 +234,13 @@ GetAnnotations <- function(genome) {
     chrName <- annot[[mart$vars$chrName]]
     
     # check if name begins with "chr", fix it if not:
-    someChrName <- tolower(chrName[1])
-    if(substr(someChrName, 1, 3) != "chr"){
-      chrName <- paste0("chr", chrName)
-    } 
+    #someChrName <- tolower(chrName[1])
+    #if(substr(someChrName, 1, 3) != "chr"){
+    #  chrName <- paste0("chr", chrName)
+    #}
+    
+    # Make sure the chromosome names have the UCSC style
+    seqlevelsStyle(chrName) <- 'UCSC'
     
     TSS <- txStart
     TTS <- txEnd
