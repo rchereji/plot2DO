@@ -115,6 +115,9 @@ ConstructReferenceGRanges <- function(optSites, annotat, selectedReference, befo
     referenceFilePath <- file.path(annotationsBasePath, referenceFilename)
     sites <- import.bed(referenceFilePath)
     
+    # Make sure the chromosome names are following the 'UCSC' convention
+    seqlevelsStyle(sites) <- 'UCSC'
+    
     switch(optAlign, 
            "center"    ={ fixAlign = "center" },
            "fivePrime" ={ fixAlign = "start" },
