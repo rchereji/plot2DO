@@ -24,6 +24,10 @@ LoadReads <- function(inputFilename, genome, annotations){
          }
   )
   
+  # Make sure the chromosome names are following the 'UCSC' convention
+  require(GenomeInfoDb)
+  seqlevelsStyle(reads) <- 'UCSC'
+  
   return(reads)
   
 }
