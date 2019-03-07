@@ -99,13 +99,13 @@ annotations:
     chromosome_size: 
       url: http://hgdownload.cse.ucsc.edu/goldenPath/dm6/database/chromInfo.txt.gz
       filter:
-        - 2L
-        - 2R
-        - 3L
-        - 3R
-        - 4
-        - X
-        - Y
+        - chr2L
+        - chr2R
+        - chr3L
+        - chr3R
+        - chr4
+        - chrX
+        - chrY
       path: annotations/dm6_chromInfo.txt  
     mart:
       host: may2017.archive.ensembl.org
