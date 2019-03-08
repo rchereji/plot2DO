@@ -7,17 +7,17 @@ CreateOptionsParser <- function(){
   
   options = list(
     make_option(c("-f", "--file"), type="character", default=NULL, 
-                help="Dataset file name [options: BED or BAM format]"),
+                help="Name of the file containing aligned sequencing data [options: BAM or BED file]"),
     make_option(c("-t", "--type"), type="character", default="occ", 
-                help="Types of distribution to plot [options: occ, dyads, fivePrime_ends, threePrime_ends; default = %default]"),
+                help="Type of distribution to plot [options: occ, dyads, fivePrime_ends, threePrime_ends; default = %default]"),
     make_option(c("-g", "--genome"), type="character", default="sacCer3", 
-                help="Genome version [options: sacCer3 (default) (S. cerevisiae); EF2 (S. pombe); tair10 (A. thaliana); dm3, dm6 (D. melanogaster), ce10, ce11 (C. elegans), mm9, mm10 (M. musculus), hg18, hg19 (H. sapiens)]"),
+                help="Genome version\n\t\t[options: sacCer3 (default) (S. cerevisiae); EF2 (S. pombe); dm3, dm6 (D. melanogaster);\n\t\tce10, ce11 (C. elegans); mm9, mm10 (M. musculus);\n\t\thg18, hg19, hg38 (H. sapiens); tair10 (A. thaliana)]"),
     make_option(c("-r", "--reference"), type="character", default="TSS", 
-                help="Reference points to align [options: TSS (default), TTS, Plus1]"),
+                help="Reference points to be aligned [options: TSS (default), TTS, Plus1]"),
     make_option(c("-s", "--sites"), type="character", default=NULL, 
-                help="Reference points in BED format"),
+                help="User-provided sites to be aligned (BED file)"),
     make_option(c("-a", "--align"), type="character", default="center", 
-                help="What points of the provided intervals to align? [options: center (default), fivePrime, threePrime]"),
+                help="Points of the provided intervals to be aligned? [options: center (default), fivePrime, threePrime]"),
     make_option(c("--siteLabel"), type="character", default="Sites", 
                 help="Label for the aligned sites [default = %default]"),
     make_option(c("-l", "--minLength"), type="integer", default=50, 
@@ -25,15 +25,15 @@ CreateOptionsParser <- function(){
     make_option(c("-L", "--maxLength"), type="integer", default=200, 
                 help="The largest DNA fragment to be considered [default = %default]"),
     make_option(c("-u", "--upstream"), type="integer", default=1000, 
-                help="Length of the upstream region that will be plotted [default = %default]"),
+                help="Length of the upstream region to be plotted [default = %default]"),
     make_option(c("-d", "--downstream"), type="integer", default=1000, 
-                help="Length of the downstream region that will be plotted [default = %default]"),
+                help="Length of the downstream region to be plotted [default = %default]"),
     make_option(c("-m", "--colorScaleMax"), type="double", default=NULL, 
                 help="Maximum value on the color scale (e.g. 0.02)"),
     make_option(c("--simplifyPlot"), type="character", default="off", 
-                help="Simplify the plot (show only the 2D Occ.) [options: on, off (default)]"),
+                help="Simplify the plot (show only the 2D heat map) [options: on, off (default)]"),
     make_option(c("--squeezePlot"), type="character", default="off", 
-                help="Simplify the plot (show only the 2D Occ.) and squeeze the heat map [options: on, off (default)]")
+                help="Simplify the plot and squeeze the heat map [options: on, off (default)]")
   )
   
   optParser = OptionParser(option_list=options)
