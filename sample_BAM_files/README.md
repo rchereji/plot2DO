@@ -10,11 +10,10 @@ The data that were used in the examples were downloaded from GEO database. The c
 | yeast_300U_MNase_SRR3649298.bam | [GSM2193283](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM2193283) |
 | yeast_400U_MNase_SRR3649299.bam | [GSM2193284](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM2193284) |
 | fly_SRR2038265.bam | [GSM1694824](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1694824) |
-| worm_SRR3289717.bam | [GSM2098437](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM2098437) |
-| mouse_SRR572708.bam | [GSM1004654](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1004654) |
+| mouse_SRR5116996.bam | [GSM2430825](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM2430825) |
 | human_SRR1781839.bam | [GSM1425454](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1425454) |
 
-The size of the above data sets exceeds the allowed quota for a GitHub repository. Therefore, for convenience, we provide at the following website sets of 5 million random paired-end reads originating from the aforementioned data sets: 
+The size of the above data sets exceeds the allowed quota for a GitHub repository. Therefore, for convenience, we provide at the following website sets of 5 million paired-end reads randomly selected from the aforementioned data sets: 
 
 https://goo.gl/W2AoW7
 
