@@ -1,3 +1,4 @@
+wget.exe
 sample_BAM_files/*.bam
 sample_BAM_files/*.bed
 to_be_removed
