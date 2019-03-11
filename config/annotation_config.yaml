@@ -25,6 +25,10 @@ annotations:
       path: annotations/sacCer3_annotations.csv
   EF2:
     chromosome_size: 
+      filter:
+        - I
+        - II
+        - III
       path: annotations/EF2_chromInfo.txt  
     mart:
       host: fungi.ensembl.org
@@ -37,7 +41,7 @@ annotations:
         - transcript_start
         - transcript_end
       attributeId: refseq_mrna
-      vars: # required. format: "variable name: mart attibute name"
+      vars: # required. format: "variable name: mart attribute name"
           strand: strand
           txStart: transcript_start
           txEnd: transcript_end
@@ -63,7 +67,7 @@ annotations:
         - transcript_start
         - transcript_end
       attributeId: ensembl_transcript_id
-      vars: # required. format: "variable name: mart attibute name"
+      vars: # required. format: "variable name: mart attribute name"
           strand: strand
           txStart: transcript_start
           txEnd: transcript_end
@@ -90,7 +94,7 @@ annotations:
         - transcript_start
         - transcript_end
       attributeId: refseq_mrna
-      vars: # required. format: "variable name: mart attibute name"
+      vars: # required. format: "variable name: mart attribute name"
         strand: strand
         txStart: transcript_start
         txEnd: transcript_end
@@ -118,7 +122,7 @@ annotations:
         - transcript_start
         - transcript_end
       attributeId: refseq_mrna
-      vars: # required. format: "variable name: mart attibute name"
+      vars: # required. format: "variable name: mart attribute name"
         strand: strand
         txStart: transcript_start
         txEnd: transcript_end
@@ -145,7 +149,7 @@ annotations:
         - transcript_start
         - transcript_end
       attributeId: refseq_mrna
-      vars: # required. format: "variable name: mart attibute name"
+      vars: # required. format: "variable name: mart attribute name"
         strand: strand
         txStart: transcript_start
         txEnd: transcript_end
@@ -162,7 +166,7 @@ annotations:
         - chrX
       path: annotations/ce11_chromInfo.txt  
     mart:
-      host: may2017.archive.ensembl.org
+      host: jan2019.archive.ensembl.org
       biomart: ENSEMBL_MART_ENSEMBL
       dataset: celegans_gene_ensembl
       attributes:
@@ -172,7 +176,7 @@ annotations:
         - transcript_start
         - transcript_end
       attributeId: refseq_mrna
-      vars: # required. format: "variable name: mart attibute name"
+      vars: # required. format: "variable name: mart attribute name"
         strand: strand
         txStart: transcript_start
         txEnd: transcript_end
@@ -214,7 +218,7 @@ annotations:
         - transcript_start
         - transcript_end
       attributeId: refseq_mrna
-      vars: # required. format: "variable name: mart attibute name"
+      vars: # required. format: "variable name: mart attribute name"
         strand: strand
         txStart: transcript_start
         txEnd: transcript_end
@@ -246,7 +250,7 @@ annotations:
         - chrY      
       path: annotations/mm10_chromInfo.txt  
     mart:
-      host: oct2014.archive.ensembl.org
+      host: oct2018.archive.ensembl.org
       biomart: ENSEMBL_MART_ENSEMBL
       dataset: mmusculus_gene_ensembl
       attributes:
@@ -256,7 +260,7 @@ annotations:
         - transcript_start
         - transcript_end
       attributeId: refseq_mrna
-      vars: # required. format: "variable name: mart attibute name"
+      vars: # required. format: "variable name: mart attribute name"
         strand: strand
         txStart: transcript_start
         txEnd: transcript_end
@@ -301,7 +305,7 @@ annotations:
         - transcript_start
         - transcript_end
       attributeId: refseq_mrna
-      vars: # required. format: "variable name: mart attibute name"
+      vars: # required. format: "variable name: mart attribute name"
         strand: strand
         txStart: transcript_start
         txEnd: transcript_end
@@ -336,7 +340,7 @@ annotations:
         - chrY      
       path: annotations/hg19_chromInfo.txt  
     mart:
-      host: feb2014.archive.ensembl.org
+      host: grch37.ensembl.org
       biomart: ENSEMBL_MART_ENSEMBL
       dataset: hsapiens_gene_ensembl
       attributes:
@@ -346,7 +350,7 @@ annotations:
         - transcript_start
         - transcript_end
       attributeId: refseq_mrna
-      vars: # required. format: "variable name: mart attibute name"
+      vars: # required. format: "variable name: mart attribute name"
         strand: strand
         txStart: transcript_start
         txEnd: transcript_end
@@ -381,7 +385,7 @@ annotations:
         - chrY      
       path: annotations/hg38_chromInfo.txt  
     mart:
-      host: oct2018.archive.ensembl.org
+      host: jan2019.archive.ensembl.org
       biomart: ENSEMBL_MART_ENSEMBL
       dataset: hsapiens_gene_ensembl
       attributes:
@@ -391,7 +395,7 @@ annotations:
         - transcript_start
         - transcript_end
       attributeId: refseq_mrna
-      vars: # required. format: "variable name: mart attibute name"
+      vars: # required. format: "variable name: mart attribute name"
         strand: strand
         txStart: transcript_start
         txEnd: transcript_end

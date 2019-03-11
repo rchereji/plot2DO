@@ -330,8 +330,8 @@ GetGraphicalParams <- function(simplifyPlot, squeezePlot) {
       layout <- cbind(c(1, 1, 1), c(1, 1, 1))
       gridWidths <- c(1, 1)
       gridHeights <- c(1, 1, 1)
-      plotWidth <- 5.5
-      plotHeight <- 8
+      plotWidth <- 4
+      plotHeight <- 5
     } else {
       layout <- cbind(c(1))
       gridWidths <- c(1)

@@ -2,7 +2,7 @@
 # CRAN: 
 #   c("colorRamps", "doParallel", "foreach", "ggplot2", "gridExtra", "optparse", "pracma", "reshape2", "yaml")
 # Bioconductor: 
-#   c("AnnotationHub", "biomaRt", "GenomicRanges", "GenomeInfoDb", "IRanges", "Rsamtools", "rtracklayer")
+#   c("AnnotationHub", "biomaRt", "GenomicFeatures", "GenomicRanges", "GenomeInfoDb", "IRanges", "Rsamtools", "rtracklayer")
 # R core libraries (do not need installation): 
 #   c("grid", "parallel", "tools")
 
@@ -34,7 +34,7 @@ foo <- sapply(cranLibraries, function(x) {
 # Install Bioconductor packages
 cat("\n")
 cat("Checking and installing missing Bioconductor packages:\n")
-bioconductorLibraries <- c("AnnotationHub", "biomaRt", "GenomicRanges", "GenomeInfoDb", "IRanges", "Rsamtools", "rtracklayer")
+bioconductorLibraries <- c("AnnotationHub", "biomaRt", "GenomicFeatures", "GenomicRanges", "GenomeInfoDb", "IRanges", "Rsamtools", "rtracklayer")
 if (!requireNamespace("BiocManager", quietly = TRUE)){
   install.packages("BiocManager")
 }

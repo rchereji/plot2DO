@@ -6,6 +6,7 @@ suppressPackageStartupMessages({
   library(Rsamtools)
   library(rtracklayer)
   library(GenomeInfoDb)
+  library(GenomicFeatures)
 })
 
 LoadReads <- function(inputFilename, genome, annotations){
@@ -151,6 +152,45 @@ LoadGenomeAnnotation <- function(genome){
 
 }
 
+LoadGenomeAnnotation_v2 <- function(inputFilename, genome){
+  
+  inputType <- toupper(file_ext(inputFilename))
+  
+  switch(inputType, 
+         BED={
+           result = LoadGenomeAnnotation(genome)
+         },
+         BAM={
+           # Read chrLen directly from the BAM file
+           bam_file = Rsamtools::BamFile(inputFilename)
+           
+           # Get the chromosome names/lengths
+           chrLen = seqlengths(bam_file)
+           
+           # Rename to chr to UCSC style
+           newChrNames <- mapSeqlevels(names(chrLen), "UCSC")
+           names(chrLen) <- newChrNames
+           
+           # Filter the chromosomes
+           configFilePath <- file.path(configBasePath, "annotation_config.yaml")
+           config <- yaml.load_file(configFilePath)
+           chrFilter <- config$annotations[[genome]]$chromosome_size$filter
+           chrLen <- chrLen[chrFilter]
+                      
+           annotations <- GetAnnotations(genome)
+           
+           result <- list(chrLen = chrLen, annotations = annotations)
+         },
+         {
+           print_help(opt_parser)
+           stop("File type not supported! Please provide a BED or BAM file as input.", call.=FALSE)
+         }
+  )
+  
+  return(result)
+  
+}
+
 GetChromosomeLength <- function(genome) {
   
   configFilePath <- file.path(configBasePath, "annotation_config.yaml")
@@ -220,7 +260,7 @@ GetAnnotations <- function(genome) {
     if (is.null(mart$host)) {
       ensembl <- useMart(biomart = mart$biomart, dataset = mart$dataset)  
     } else {
-      ensembl <- useMart(host = mart$host,biomart = mart$biomart, dataset = mart$dataset)
+      ensembl <- useMart(host = mart$host, biomart = mart$biomart, dataset = mart$dataset)
     }
     
     annot <- getBM(mart$attributes, mart=ensembl)
@@ -232,12 +272,6 @@ GetAnnotations <- function(genome) {
     txStart <- annot[[mart$vars$txStart]]
     txEnd <- annot[[mart$vars$txEnd]]
     chrName <- annot[[mart$vars$chrName]]
-    
-    # check if name begins with "chr", fix it if not:
-    #someChrName <- tolower(chrName[1])
-    #if(substr(someChrName, 1, 3) != "chr"){
-    #  chrName <- paste0("chr", chrName)
-    #}
     
     # Make sure the chromosome names have the UCSC style
     seqlevelsStyle(chrName) <- 'UCSC'

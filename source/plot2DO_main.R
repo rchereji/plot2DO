@@ -16,7 +16,8 @@ Main <- function(command_line_args=NA)
 
   rm(opt) # deleted to be sure using initialized params
   
-  annotations <- LoadGenomeAnnotation(params$genome)
+  # annotations <- LoadGenomeAnnotation(params$genome)
+  annotations <- LoadGenomeAnnotation_v2(params$inputFilePath, params$genome)
   
   rawReads <- LoadReads(params$inputFilePath, params$genome, annotations)
   
