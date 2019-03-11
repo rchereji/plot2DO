@@ -5,5 +5,5 @@ output
 annotations/*chromInfo.txt
 .Rhistory
 .ipynb_checkpoints
-plot2DO_tests-python.ipynb
-plotting_tests.R
+plot2DO_tests*
+plotting_tests*
