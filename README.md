@@ -26,7 +26,63 @@ $ brew install wget
 ```
 
 ## Usage
-After the R packages have been installed, you can execute **plot2DO** from a terminal. The only required input is the name of the file that contains the aligned genomic data (provided as a BAM- or BED-formatted file). To generate the default 2D occupancy (2DO) plot (around TSS, all DNA fragments with the lengths between 50 - 200 bp, 2kb windows centered on TSS, yeast DNA), run the following command:
+After the R packages have been installed, you can execute **plot2DO** from a terminal. To list all the available options of **plot2DO**, run the following command:
+```
+$ Rscript plot2DO.R --help                                                                               
+Usage: plot2DO.R [options]
+
+
+Options:
+        -f FILE, --file=FILE
+                Name of the file containing aligned sequencing data [options: BAM or BED file]
+
+        -t TYPE, --type=TYPE
+                Type of distribution to plot [options: occ, dyads, fivePrime_ends, threePrime_ends; default = occ]
+
+        -g GENOME, --genome=GENOME
+                Genome version
+                [options: sacCer3 (default) (S. cerevisiae); EF2 (S. pombe); dm3, dm6 (D. melanogaster);
+                ce10, ce11 (C. elegans); mm9, mm10 (M. musculus);
+                hg18, hg19, hg38 (H. sapiens); tair10 (A. thaliana)]
+
+        -r REFERENCE, --reference=REFERENCE
+                Reference points to be aligned [options: TSS (default), TTS, Plus1]
+
+        -s SITES, --sites=SITES
+                User-provided sites to be aligned (BED file)
+
+        -a ALIGN, --align=ALIGN
+                Points of the provided intervals to be aligned? [options: center (default), fivePrime, threePrime]
+
+        --siteLabel=SITELABEL
+                Label for the aligned sites [default = Sites]
+
+        -l MINLENGTH, --minLength=MINLENGTH
+                The smallest DNA fragment to be considered [default = 50]
+
+        -L MAXLENGTH, --maxLength=MAXLENGTH
+                The largest DNA fragment to be considered [default = 200]
+
+        -u UPSTREAM, --upstream=UPSTREAM
+                Length of the upstream region to be plotted [default = 1000]
+
+        -d DOWNSTREAM, --downstream=DOWNSTREAM
+                Length of the downstream region to be plotted [default = 1000]
+
+        -m COLORSCALEMAX, --colorScaleMax=COLORSCALEMAX
+                Maximum value on the color scale (e.g. 0.02)
+
+        --simplifyPlot=SIMPLIFYPLOT
+                Simplify the plot (show only the 2D heat map) [options: on, off (default)]
+
+        --squeezePlot=SQUEEZEPLOT
+                Simplify the plot and squeeze the heat map [options: on, off (default)]
+
+        -h, --help
+                Show this help message and exit
+```
+
+Almost all arguments of **plot2DO** are optional. If an argument is not specified, it will take its default value, as indicated above. The only required argument for **plot2DO** is the name of the file that contains the aligned genomic data (in BAM or BED format), which is provided using the `-f/--file` argument. A minimal example, which generates the default 2D occupancy (2DO) plot (around TSS, all DNA fragments with the lengths between 50 - 200 bp, 2kb windows centered on TSS, yeast DNA), is given below:
 ```
 $ Rscript plot2DO.R --file=yeast_SRR2045610.bam
 ```
@@ -83,62 +139,6 @@ The figures resulted from these commands are shown as panels in Figure 5.
 |![](misc/Figure_7.png)|
 |:--:|
 | **Figure 5.** *A titration of MNase produces different levels of chromatin digestion, and different sizes for the undigested fragments of DNA. Plus 1 nucleosomes are particularly sensitive to MNase, as they are located adjacent to the nucleosome free regions (the most accessible regions of the genome).* |
-
-To list all the available options of **plot2DO**, run the following command in the terminal:
-```
-$ Rscript plot2DO.R --help                                                                               
-Usage: plot2DO.R [options]
-
-
-Options:
-        -f FILE, --file=FILE
-                Name of the file containing aligned sequencing data [options: BAM or BED file]
-
-        -t TYPE, --type=TYPE
-                Type of distribution to plot [options: occ, dyads, fivePrime_ends, threePrime_ends; default = occ]
-
-        -g GENOME, --genome=GENOME
-                Genome version
-                [options: sacCer3 (default) (S. cerevisiae); EF2 (S. pombe); dm3, dm6 (D. melanogaster);
-                ce10, ce11 (C. elegans); mm9, mm10 (M. musculus);
-                hg18, hg19, hg38 (H. sapiens); tair10 (A. thaliana)]
-
-        -r REFERENCE, --reference=REFERENCE
-                Reference points to be aligned [options: TSS (default), TTS, Plus1]
-
-        -s SITES, --sites=SITES
-                User-provided sites to be aligned (BED file)
-
-        -a ALIGN, --align=ALIGN
-                Points of the provided intervals to be aligned? [options: center (default), fivePrime, threePrime]
-
-        --siteLabel=SITELABEL
-                Label for the aligned sites [default = Sites]
-
-        -l MINLENGTH, --minLength=MINLENGTH
-                The smallest DNA fragment to be considered [default = 50]
-
-        -L MAXLENGTH, --maxLength=MAXLENGTH
-                The largest DNA fragment to be considered [default = 200]
-
-        -u UPSTREAM, --upstream=UPSTREAM
-                Length of the upstream region to be plotted [default = 1000]
-
-        -d DOWNSTREAM, --downstream=DOWNSTREAM
-                Length of the downstream region to be plotted [default = 1000]
-
-        -m COLORSCALEMAX, --colorScaleMax=COLORSCALEMAX
-                Maximum value on the color scale (e.g. 0.02)
-
-        --simplifyPlot=SIMPLIFYPLOT
-                Simplify the plot (show only the 2D heat map) [options: on, off (default)]
-
-        --squeezePlot=SQUEEZEPLOT
-                Simplify the plot and squeeze the heat map [options: on, off (default)]
-
-        -h, --help
-                Show this help message and exit
-```
 
 
 ## Quality check of MNase-seq data
