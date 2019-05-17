@@ -155,7 +155,7 @@ CalculatePlotData <- function(params, reads, referenceGRanges) {
   
   # Compute the histogram
   readLength <- width(reads) 
-  h <- hist(readLength, breaks=seq(from = min(readLength)-0.5, to = max(readLength)+0.5, by = 1), plot=FALSE)
+  h <- hist(readLength, breaks=seq(from = 0.5, to = max(readLength)+0.5, by = 1), plot=FALSE)
   lengthHist <- 100 * h$density[params$lMin:params$lMax]
   
   totalNoReads <- length(reads)
