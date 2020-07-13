@@ -44,7 +44,8 @@ ComputeCoverageMatrix <- function(lMin, lMax, beforeRef, afterRef, reads,
   registerDoParallel(cores=noCores)
   
   # For each fragment size, compute the corresponding coverage/occupancy
-  occMatrixTranspose <- foreach(l=lMin:lMax, .combine='cbind') %dopar% {
+  #occMatrixTranspose <- foreach(l=lMin:lMax, .combine='cbind') %dopar% {
+  occMatrixTranspose <- foreach(l=lMin:lMax, .export=c("AlignRegionsTranspose"), .packages=c('GenomicRanges', 'pracma'), .combine='cbind') %dopar% {
     # Keep only the reads with the specific length l
     goodReadsInd <- (readLength == l)
     goodReads <- reads[goodReadsInd]
