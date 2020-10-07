@@ -33,8 +33,12 @@ LoadReads <- function(inputFilename, genome, annotations){
 BuildReadsGRangesFromBED <- function(bedFilename, genome, annotations){
   reads <- import.bed(bedFilename)
   
-  # Make sure the chromosome names are following the 'UCSC' convention
-  seqlevelsStyle(reads) <- 'UCSC'
+  if(genome == 'tair10') {
+    seqlevelsStyle(reads) <- 'Ensembl'
+  } else {
+    # Make sure the chromosome names are following the 'UCSC' convention
+    seqlevelsStyle(reads) <- 'UCSC'
+  }
   
   genomeSeqInfo <- Seqinfo(seqnames = names(annotations$chrLen),
                            seqlengths = as.numeric(annotations$chrLen),
@@ -67,8 +71,12 @@ BuildReadsGRangesFromBAM <- function(bamFilename, genome, annotations){
                    ranges = IRanges(start = aln$pos[posStrandReads], 
                                     width = aln$isize[posStrandReads]))
   
-  # Make sure the chromosome names are following the 'UCSC' convention
-  seqlevelsStyle(reads) <- 'UCSC'
+  if(genome == 'tair10') {
+    seqlevelsStyle(reads) <- 'Ensembl'
+  } else {
+    # Make sure the chromosome names are following the 'UCSC' convention
+    seqlevelsStyle(reads) <- 'UCSC'
+  }
   
   genomeSeqInfo <- Seqinfo(seqnames = names(annotations$chrLen),
                            seqlengths = as.numeric(annotations$chrLen),
@@ -162,13 +170,19 @@ LoadGenomeAnnotation_v2 <- function(inputFilename, genome){
          },
          BAM={
            # Read chrLen directly from the BAM file
-           bam_file = Rsamtools::BamFile(inputFilename)
+           bam_file <- Rsamtools::BamFile(inputFilename)
            
            # Get the chromosome names/lengths
-           chrLen = seqlengths(bam_file)
+           chrLen <- seqlengths(bam_file)
            
-           # Rename to chr to UCSC style
-           newChrNames <- mapSeqlevels(names(chrLen), "UCSC")
+
+           if(genome == 'tair10') {
+             newChrNames <- mapSeqlevels(names(chrLen), "Ensembl")
+           } else {
+            # Rename to UCSC style
+            newChrNames <- mapSeqlevels(names(chrLen), "UCSC")
+           }
+           
            names(chrLen) <- newChrNames
            
            # Filter the chromosomes
@@ -273,8 +287,12 @@ GetAnnotations <- function(genome) {
     txEnd <- annot[[mart$vars$txEnd]]
     chrName <- annot[[mart$vars$chrName]]
     
-    # Make sure the chromosome names have the UCSC style
-    seqlevelsStyle(chrName) <- 'UCSC'
+    if(genome == 'tair10') {
+      seqlevelsStyle(chrName) <- 'Ensembl'
+    } else {
+      # Make sure the chromosome names have the UCSC style
+      seqlevelsStyle(chrName) <- 'UCSC'
+    }
     
     TSS <- txStart
     TTS <- txEnd
