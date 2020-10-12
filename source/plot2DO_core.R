@@ -117,10 +117,10 @@ ConstructReferenceGRanges <- function(optSites, annotat, selectedReference, befo
     sites <- import.bed(referenceFilePath)
     
   if(genome == 'tair10') {
-    seqlevelsStyle(reads) <- 'Ensembl'
+    seqlevelsStyle(sites) <- 'Ensembl'
   } else {
     # Make sure the chromosome names are following the 'UCSC' convention
-    seqlevelsStyle(reads) <- 'UCSC'
+    seqlevelsStyle(sites) <- 'UCSC'
   }
     
     switch(optAlign, 
