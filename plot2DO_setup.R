@@ -11,7 +11,7 @@ noError = TRUE
 
 # Install CRAN packages
 cat("Checking and installing missing CRAN packages:\n")
-cranLibraries <- c("colorRamps", "doParallel", "foreach", "ggplot2", "gridExtra", "optparse", "pracma", "reshape2", "yaml")
+cranLibraries <- c("colorRamps", "doParallel", "foreach", "ggplot2", "gridExtra", "optparse", "pracma", "reshape2", "xml2", "yaml")
 foo <- sapply(cranLibraries, function(x) {
   if (requireNamespace(x, quietly = TRUE)){
     result <- "was already available."

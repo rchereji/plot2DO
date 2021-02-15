@@ -84,7 +84,7 @@ annotations:
         - chrX
       path: annotations/dm3_chromInfo.txt  
     mart:
-      host: dec2014.archive.ensembl.org
+      host: oct2014.archive.ensembl.org
       biomart: ENSEMBL_MART_ENSEMBL
       dataset: dmelanogaster_gene_ensembl
       attributes:
