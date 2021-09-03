@@ -189,7 +189,7 @@ LoadGenomeAnnotation_v2 <- function(inputFilename, genome){
            configFilePath <- file.path(configBasePath, "annotation_config.yaml")
            config <- yaml.load_file(configFilePath)
            chrFilter <- config$annotations[[genome]]$chromosome_size$filter
-           chrLen <- chrLen[chrFilter]
+           chrLen <- chrLen[names(chrLen) %in% chrFilter]
                       
            annotations <- GetAnnotations(genome)
            
